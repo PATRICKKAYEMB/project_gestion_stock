@@ -3,6 +3,7 @@ import Axios from "axios"
 import { jwtDecode } from "jwt-decode"
 
 export const BaseUrl= "http://127.0.0.1:8000/api/"
+export const BASEUrl= "http://127.0.0.1:8000"
 
 export const api = Axios.create({
     baseURL:BaseUrl

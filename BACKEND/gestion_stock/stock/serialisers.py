@@ -42,30 +42,38 @@ class ProduitSerializer(serializers.ModelSerializer):
 
 
 class PerteProduitSerializer(serializers.ModelSerializer):
-    produit = serializers.StringRelatedField()
+    produit_nom = serializers.CharField(source="produit.name", read_only=True)
+    prix_produit = serializers.IntegerField(source="produit.prix", read_only=True)
+    
 
     class Meta:
         model = PerteProduit
-        fields = "__all__"
+        fields = ['id', 'produit_nom', 'prix_produit', 'quantite', 'date_perte',"description", 'total']
 
 
 class VenteProduitSerializer(serializers.ModelSerializer):
-    produit = serializers.PrimaryKeyRelatedField(read_only=True)
-    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
+    client = serializers.StringRelatedField(read_only=True)
+    produit_nom = serializers.CharField(source="produit.name", read_only=True)
+    prix_produit = serializers.IntegerField(source="produit.prix", read_only=True)
+
 
     class Meta:
         model = VenteProduit
-        fields = "__all__"
+        fields = ['id', 'client', 'produit_nom', 'prix_produit', 'quantite', 'date_vente', 'total']
+
+   
 
     
 
 
 class ApprovisionnerProduitSerializer(serializers.ModelSerializer):
-    produit = serializers.StringRelatedField()
+    client = serializers.StringRelatedField(read_only=True)
+    produit_nom = serializers.CharField(source="produit.name", read_only=True)
+    prix_produit = serializers.IntegerField(source="produit.prix", read_only=True)
 
     class Meta:
         model = ApprovisionnerProduit
-        fields = "__all__"
+        fields = ['id', 'client', 'produit_nom', 'prix_produit', 'quantite', 'date_achat', 'total']
 
 
 class NotificationSerializer(serializers.ModelSerializer):

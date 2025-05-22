@@ -86,7 +86,7 @@ def produit(request,id_prod=None):
 
     if request.method == "GET":
 
-        service_nom =request.query_params.get("service")
+        categorie_name =request.query_params.get("categorie")
         date_debut=request.query_params.get("date_debut")
         date_fin=request.query_params.get("date_fin")
 
@@ -94,19 +94,19 @@ def produit(request,id_prod=None):
 
         produit=Produit.objects.all()
 
-        if service_nom:
-            produit =produit.filter(service__nom__iexact=service_nom)
+        if categorie_name:
+            produit =produit.filter(categorie__name=categorie_name)
         if date_debut and date_fin:
             produit=produit.filter(date__range=[date_debut,date_fin])
 
         if sort_by == "recent":
-            produit =produit.order_by("-date")
+            produit =produit.order_by("-date_ajout")
         elif sort_by == "ancient":
-            produit = produit .order_by("date")
+            produit = produit .order_by("date_ajout")
         elif sort_by == "montant_desc":
-            produit = produit.order_by("-montant")
+            produit = produit.order_by("-total")
         elif sort_by == "montant_asc":
-            produit =produit.order_by("montant")
+            produit =produit.order_by("total")
 
         serializer=ProduitSerializer(produit,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -182,7 +182,7 @@ def historiqueVente(request):
 
     date_debut= request.query_params.get("date_debut")
     date_fin=request.query_params.get("date_fin")
-    service_nom=request.query_params.get("service")
+    categorie_nom=request.query_params.get("categorie")
     sort_by =request.query_params.get("sort")
 
 
@@ -192,19 +192,21 @@ def historiqueVente(request):
     ventes=VenteProduit.objects.all()
 
     if date_debut and date_fin:
-        ventes=ventes.filter(date__range=[date_debut,date_fin])
+        
+        ventes = ventes.filter(date_vente__range=[date_debut, date_fin])
 
-    if service_nom:
-        ventes =ventes.filter(service__nom__iexact=service_nom)
+    if categorie_nom:
+        ventes = ventes.filter(produit__categorie__id=categorie_nom)
+
 
     if sort_by== "recent":
-        ventes=ventes.order_by("-date")
+        ventes=ventes.order_by("-date_vente")
     if sort_by == "ancien":
-        ventes = ventes.order_by("date")
-    if sort_by == "montan_desc":
-        ventes= ventes.order_by("-montant")
+        ventes = ventes.order_by("date_vente")
+    if sort_by == "montant_desc":
+        ventes= ventes.order_by("-total")
     if sort_by == "montant_asc":
-        ventes =ventes.order_by("montant")
+        ventes =ventes.order_by("total")
 
     
     serializer=VenteProduitSerializer(ventes,many=True)
@@ -226,7 +228,7 @@ def historiqueVente(request):
 
 def historiqueAchat(request):
 
-    service_nom = request.query_params.get("service")
+    categorie_nom = request.query_params.get("categorie")
     date_debut=request.query_params.get("date_debut")
     date_fin=request.query_params.get("date_fin")
     sort_by=request.query_params.get("sort")
@@ -234,19 +236,20 @@ def historiqueAchat(request):
 
     Achat=ApprovisionnerProduit.objects.all()
 
-    if service_nom :
-        Achat =Achat.filter(service__nom__iexact=service_nom)
+    if categorie_nom :
+        Achat =Achat.filter(produit__categorie__id=categorie_nom)
+       
 
     if date_debut and date_fin:
-        Achat =Achat.filter(date__range=[date_debut,date_fin])
+        Achat =Achat.filter(date_perte__range=[date_debut,date_fin])
     if sort_by=="recent":
-        Achat=Achat.order_by("-date")
+        Achat=Achat.order_by("-date_achat")
     if sort_by == "ancient":
-        Achat =Achat.order_by("date")
+        Achat =Achat.order_by("date_achat")
     if sort_by == "montant_desc":
-        Achat =Achat.order_by("-montant")
+        Achat =Achat.order_by("-total")
     if sort_by == "montant_asc":
-        Achat =Achat.order_by("montant")
+        Achat =Achat.order_by("total")
 
     serializer=ApprovisionnerProduitSerializer(Achat,many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
@@ -258,27 +261,28 @@ def historiqueAchat(request):
 @permission_classes([IsAuthenticated])
 
 def historiquePerte(request):
-    service_nom=request.query_params.get("service")
+    categorie_nom=request.query_params.get("categorie")
     date_debut=request.query_params.get("date_debut")
     date_fin=request.query_params.get("date_fin")
-    sorte_by =request.query_params.get("sorte")
+    sort_by =request.query_params.get("sort")
 
     
     perte=PerteProduit.objects.all()
 
-    if service_nom :
-        perte = perte.filter(service__nom__iexact=service_nom)
-    if date_debut and date_fin:
-        perte =perte.filter(date__range=[date_debut,date_fin])
+    if categorie_nom :
+        perte =perte.filter(produit__categorie__id=categorie_nom)
+       
 
-    if sorte_by == "recent":
-        perte=perte.order_by("-date")
-    elif sorte_by == "ancien":
-        perte =perte.order_by("date")
-    elif sorte_by == "montant_desc":
-        perte=perte.order_by("-montant")
-    elif sorte_by == "montant_asc":
-        perte =perte.order_by("montant")
+    if date_debut and date_fin:
+        perte =perte.filter(date_perte__range=[date_debut,date_fin])
+    if sort_by=="recent":
+        perte.order_by("-date_perte")
+    if sort_by == "ancient":
+        perte =perte.order_by("date_perte")
+    if sort_by == "montant_desc":
+        perte =perte.order_by("-total")
+    if sort_by == "montant_asc":
+        perte =perte.order_by("total")
 
     serializer=PerteProduitSerializer(perte,many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)

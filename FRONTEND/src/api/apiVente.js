@@ -11,9 +11,9 @@ export async function countVente(){
         }
 }
 
-export const  voir_vente= async ({date_debut,date_fin,sort} ={}) =>{
+export const  voir_vente= async ({date_debut,date_fin,sort,categorie} ={}) =>{
     const params = {}
-
+    if ( categorie) params.categorie= categorie
     if (date_debut && date_fin){
         params.date_debut =date_debut
         params.date_fin =date_fin
