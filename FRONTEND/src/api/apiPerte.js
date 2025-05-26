@@ -27,3 +27,14 @@ export async function voir_perte({ categorie, date_debut, date_fin, sort } = {})
     const response = await api.get("historiquePerte/", { params });
     return response.data;
   }
+
+  export async function perte_produit({formData , id}){
+    try {
+        const response = await api.post(`perteProduit/${id}/`,formData)
+        return response.data
+        
+    } catch (error) {
+        console.error("Erreur lors de l'ajout du perte",error)
+        throw error
+    }
+  }

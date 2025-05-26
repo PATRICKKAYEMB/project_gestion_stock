@@ -2,10 +2,10 @@ import { BellIcon } from 'lucide-react'
 import React from 'react'
 import { BiUser } from 'react-icons/bi'
 
-const Navbar = () => {
+const Navbar = ({name}) => {
   return (
     <div className='flex-1 flex justify-between bg-blue-900 px-5 py-1 h-[60px] ml-1 items-center ' >
-        <h3 className='text-white text-2xl font-bold'>produits</h3> 
+        <h3 className='text-white text-2xl font-bold'>{name}</h3> 
         
         <div className='flex items-center justify-center gap-3'>
           

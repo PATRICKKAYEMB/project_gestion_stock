@@ -15,21 +15,24 @@ import DashbordPage from '../pages/DashbordPage'
 import ProduitGridPage from '../pages/ProduitGridPage'
 import ProtectRoute from '@/auth/ProtectRoute'
 import Login from '@/auth/Login'
+import DetailProduit from '@/pages/DetailProduit'
 
 
 const RoutingPage = () => {
   return (
       <Routes>
+        
+        <Route path='detailProduit/:id' element={<ProtectRoute><DetailProduit/></ProtectRoute>}/>
         <Route path='/produits' element={  <ProtectRoute>  <ProduitsPage/> </ProtectRoute>}/>
-        <Route path='/vente' element={  <ProtectRoute> <VentePage/> </ProtectRoute>}/>
-        <Route path='/approvisionner' element={<ProtectRoute> <ApprovisionnerPage/> </ProtectRoute> }/> 
-        <Route path='/ajouterPerte' element={ <ProtectRoute> <AjouterPertePage/>  </ProtectRoute>} />
+        <Route path='/vente/:id' element={  <ProtectRoute> <VentePage/> </ProtectRoute>}/>
+        <Route path='/approvisionner/:id' element={<ProtectRoute> <ApprovisionnerPage/> </ProtectRoute> }/> 
+        <Route path='/ajouterPerte/:id' element={ <ProtectRoute> <AjouterPertePage/>  </ProtectRoute>} />
         <Route path='/voirPerte' element={  <ProtectRoute> <VoirPertePage/> </ProtectRoute>}/>
         <Route path='/historiqueVente' element={ <ProtectRoute> <HistoriqueVentePage/> </ProtectRoute>}/>
         <Route path='/historiqueAchat' element={ <ProtectRoute> <HistoriqueAchatPage/></ProtectRoute>}/>
         <Route path='/notification' element={ <ProtectRoute> <NotificationPage/> </ProtectRoute>}/>
         <Route path='/statistique' element={ <ProtectRoute> <StatistiquePage/> </ProtectRoute>}/>
-        <Route path='/modificationProduit' element={ <ProtectRoute> <ModifierProduitPage/> </ProtectRoute>}/>
+        <Route path='/modifierProduit/:id' element={ <ProtectRoute> <ModifierProduitPage/> </ProtectRoute>}/>
         <Route path='/ajouterProduit' element={ <ProtectRoute>  <AjouterProduitPage/> </ProtectRoute>}/>
         <Route path='/ProduitGrid' element={ <ProtectRoute>  <ProduitGridPage/> </ProtectRoute>}/>
         <Route path='/dashbord' element={ <ProtectRoute> <DashbordPage/> </ProtectRoute>}/>

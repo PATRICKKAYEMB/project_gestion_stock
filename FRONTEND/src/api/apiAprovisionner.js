@@ -18,3 +18,14 @@ export async function voir_achat({ categorie, date_debut, date_fin, sort } = {})
   }
   
 
+  export async function approvisionner({formData , id}) {
+    try {
+      const response = await api.post(`achatProduit/${id}/`,formData)
+      return response.data
+    } catch (error) {
+      console.error("Erreur lors de l'approvisionnement :", error)
+      throw error  
+    }
+  }
+  
+

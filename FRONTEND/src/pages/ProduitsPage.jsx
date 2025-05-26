@@ -32,9 +32,10 @@ const ProduitsPage = () => {
     })
 
     const {data:produitsData} = useQuery({
-        queryKey:["produit_list"],
+        queryKey:["produit_list",categorie,sort],
         queryFn: (()=>voir_produict({
-            categorie,sort
+            categorie: categorie === "all" ? "" : categorie,
+            sort
         }))
     })
 
@@ -85,11 +86,11 @@ const ProduitsPage = () => {
                                     </div>
                 
                                     
-                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' >
+                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' onClick={()=>(navigate("/produits"))}>
                                             <BiCategory size={20} color='white' />
                                     </div>
                 
-                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' >
+                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'onClick={()=>(navigate("/ProduitGrid"))} >
                                             <TbCategory size={20} color='white' />
                                     </div>
 
@@ -103,6 +104,8 @@ const ProduitsPage = () => {
                                             <SelectValue placeholder="Catégorie" />
                                         </SelectTrigger>
                                         <SelectContent>
+                                    <SelectItem value="all">Toutes les catégories</SelectItem>
+
                                            { voir_categories.map( (cat,id) =>(
 
                                          
@@ -168,13 +171,13 @@ const ProduitsPage = () => {
                 <tbody className=''>
                         {
                         voir_produit.map( (prod,id) => (
-                        <tr className=' hover:bg-amber-900 transition-all ease-in-out round-md border-1 border-gray-400' key={id} >
+                        <tr className=' hover:bg-amber-900 transition-all ease-in-out round-md border-1 border-gray-400 cursor-pointer' key={id} onClick={()=>(navigate(`/detailProduit/${prod.id}/`))} >
                                 <td className=" py-3 mb-3 text-center flex gap-3 items-center justify-center">
                                     <span> {prod.name}</span>
                                     <img src={`${BASEUrl}${prod.image}`} alt="" className='w-6 h-6 rounded-full' />
                                     
                                     </td>
-                                <td className=" py-1  mb-3  text-center">{prod.categorie}</td>
+                                <td className=" py-1  mb-3  text-center">{prod.categorie.name}</td>
                                
                                 <td className="py-1  mb-3  text-center">{prod.prix}</td>
                                 <td className="py-1  mb-3  text-center">{prod.quantite}</td>

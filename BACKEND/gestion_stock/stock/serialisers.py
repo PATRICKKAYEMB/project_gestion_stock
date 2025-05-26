@@ -30,7 +30,9 @@ class CategorieSerializer(serializers.ModelSerializer):
 
 
 class ProduitSerializer(serializers.ModelSerializer):
-    categorie = serializers.StringRelatedField()
+    categorie = serializers.PrimaryKeyRelatedField(queryset=Categorie.objects.all())
+    categorie_name = serializers.SerializerMethodField()
+
     status = serializers.SerializerMethodField()
 
     class Meta:
@@ -39,6 +41,10 @@ class ProduitSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.status_quantite()
+
+    def get_categorie_name(self, obj):
+        # Assure-toi que ton modèle Categorie a bien un champ "nom"
+        return obj.categorie.name  # 
 
 
 class PerteProduitSerializer(serializers.ModelSerializer):
@@ -52,7 +58,7 @@ class PerteProduitSerializer(serializers.ModelSerializer):
 
 
 class VenteProduitSerializer(serializers.ModelSerializer):
-    client = serializers.StringRelatedField(read_only=True)
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
     produit_nom = serializers.CharField(source="produit.name", read_only=True)
     prix_produit = serializers.IntegerField(source="produit.prix", read_only=True)
 

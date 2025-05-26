@@ -11,11 +11,12 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 
 import SmallSpinnerText from '@/components/SmallSpinnerText';
-import { toast } from 'react-toastify';
+
 import { Lock, LogIn, User } from 'lucide-react';
 
 import React from 'react'
 import SmallSpinner from '@/components/SmallSpinner';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
@@ -31,7 +32,7 @@ const Login = () => {
       if (data && data.access && data.refresh) { // Vérifie si `access` et `refresh` existent
           localStorage.setItem("access", data.access);
           localStorage.setItem("refresh", data.refresh);
-          toast.success("Vous êtes connecté");
+         toast.success("vous etes connecter")
           navigate("/DashBord");
       } else {
           toast.error("Données manquantes dans la réponse");

@@ -86,6 +86,11 @@ def produit(request,id_prod=None):
 
     if request.method == "GET":
 
+        if id_prod is not None:
+            produit = get_object_or_404(Produit,id=id_prod)
+            serializer = ProduitSerializer(produit)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+
         categorie_name =request.query_params.get("categorie")
         date_debut=request.query_params.get("date_debut")
         date_fin=request.query_params.get("date_fin")
@@ -95,7 +100,7 @@ def produit(request,id_prod=None):
         produit=Produit.objects.all()
 
         if categorie_name:
-            produit =produit.filter(categorie__name=categorie_name)
+            produit =produit.filter(categorie__id=categorie_name)
         if date_debut and date_fin:
             produit=produit.filter(date__range=[date_debut,date_fin])
 
@@ -119,7 +124,10 @@ def produit(request,id_prod=None):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == "DELETE":
         produit= get_object_or_404(Produit,id=id_prod)
@@ -134,7 +142,10 @@ def produit(request,id_prod=None):
         if serializer.is_valid():
             serializer.save()
             return Response (serializer.data,status=status.HTTP_201_CREATED)
-        return Response({"message": "Méthode non autorisée"}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+             print(serializer.errors)
+             return Response({"message": "Méthode non autorisée"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
@@ -241,7 +252,7 @@ def historiqueAchat(request):
        
 
     if date_debut and date_fin:
-        Achat =Achat.filter(date_perte__range=[date_debut,date_fin])
+        Achat =Achat.filter(date_achat__range=[date_debut,date_fin])
     if sort_by=="recent":
         Achat=Achat.order_by("-date_achat")
     if sort_by == "ancient":
@@ -355,7 +366,9 @@ def achatProduit(request,id_prod):
         produit.save()
         return Response({"achat_id": achat.id, "message": "Achat enregistrée avec succès"}, status=201)
     
-    return Response(serializer.errors, status=400)
+    else:
+        print(serializer.errors)  
+        return Response(serializer.errors, status=400)
 
 
 
@@ -390,7 +403,9 @@ def perteProduit(request,id_prod):
         produit.quantite -= quantite
         produit.save()
         return Response({"perte_id": perte.id, "message": "Perte enregistrée avec succès"}, status=201)
-    return Response(serializer.errors, status=400)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 
 @api_view(["GET"])

@@ -23,3 +23,13 @@ export const  voir_vente= async ({date_debut,date_fin,sort,categorie} ={}) =>{
     const response = await api.get("historiqueVente/",{params})
     return response.data
 } 
+
+export async function venteProduit({ formData ,id}){
+        try {
+            const response = await api.post(`venteProduit/${id}/`,formData)
+                return response.data
+            
+        } catch (error) {
+            console.error("voici l'erreur dans vente produit",error)
+        }
+}
