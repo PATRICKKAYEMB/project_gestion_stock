@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+  	
 const HistoriqueVentePage = () => {
   const [date_debut, setDate_debut] = useState('');
   const [date_fin, setDate_fin] = useState('');

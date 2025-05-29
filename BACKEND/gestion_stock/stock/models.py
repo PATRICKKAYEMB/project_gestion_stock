@@ -108,7 +108,7 @@ class VenteProduit(models.Model):
     client=models.ForeignKey(Client, related_name="ventes" , on_delete=models.CASCADE)
     quantite=models.PositiveIntegerField()
     date_vente=models.DateField()
-    total=models.IntegerField()
+    total=models.IntegerField(null=True,blank=True)
 
     def save(self,*args, **kwargs):
         self.total= self.produit.prix*self.quantite
@@ -122,7 +122,7 @@ class ApprovisionnerProduit(models.Model):
     produit=models.ForeignKey(Produit,related_name="approvisionners", on_delete=models.CASCADE)
     quantite=models.PositiveIntegerField()
     date_achat=models.DateField()
-    total=models.IntegerField()
+    total=models.IntegerField(null=True,blank=True)
 
     def save (self,*args, **kwargs):
         self.total =self.produit.prix*self.quantite
@@ -135,7 +135,7 @@ class PerteProduit(models.Model):
     quantite=models.PositiveIntegerField()
     date_perte=models.DateField()
     description=models.TextField()
-    total=models.IntegerField()
+    total=models.IntegerField(null=True,blank=True)
 
 
     def save (self,*args, **kwargs):

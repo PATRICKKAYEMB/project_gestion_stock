@@ -301,28 +301,33 @@ def historiquePerte(request):
 
 
 
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def venteProduit(request, id_prod):
     produit = get_object_or_404(Produit, id=id_prod)
 
+    # Le serializer reçoit toujours le nom du client comme une chaîne de caractères
     serializer = VenteProduitSerializer(data=request.data)
     if serializer.is_valid():
         quantite = serializer.validated_data["quantite"]
-        client = serializer.validated_data["client"]
-        date_vente=serializer.validated_data["date_vente"]
+        client_name = serializer.validated_data["client"] # Récupère le nom du client (chaîne)
+        date_vente = serializer.validated_data["date_vente"]
 
         if quantite > produit.quantite:
             return Response({"message": "La quantité demandée est supérieure au stock disponible"}, status=400)
 
-
+        # Étape clé : Tente de récupérer un client par son 'name'.
+        # Si aucun client n'existe avec ce 'name', un nouveau sera créé.
+        # client_obj est l'instance du Client, created est un booléen (True si créé, False si récupéré)
+        client_obj, created = Client.objects.get_or_create(name=client_name) # <-- Utilise 'name' ici
 
         total = produit.prix * quantite
         vente = VenteProduit.objects.create(
             produit=produit,
             quantite=quantite,
             total=total,
-            client=client,
+            client=client_obj, # <-- Assigne l'objet Client (et non la chaîne de caractères)
             date_vente=date_vente
         )
 
@@ -332,7 +337,7 @@ def venteProduit(request, id_prod):
 
         return Response({"vente_id": vente.id, "message": "Vente enregistrée avec succès"}, status=201)
     else:
-        print(serializer.errors)  # <-- ici
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
    
 

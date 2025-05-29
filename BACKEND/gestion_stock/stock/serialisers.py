@@ -58,16 +58,20 @@ class PerteProduitSerializer(serializers.ModelSerializer):
 
 
 class VenteProduitSerializer(serializers.ModelSerializer):
-    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
+    # Accepte un nom (chaîne) lors de l'écriture (POST/PUT)
+    client_name = serializers.CharField(write_only=True, source='client') 
+    # Affiche le nom (ou l'ID) lors de la lecture (GET)
+    client = serializers.StringRelatedField(read_only=True) # Affiche le nom du client
+
     produit_nom = serializers.CharField(source="produit.name", read_only=True)
     prix_produit = serializers.IntegerField(source="produit.prix", read_only=True)
 
-
     class Meta:
         model = VenteProduit
-        fields = ['id', 'client', 'produit_nom', 'prix_produit', 'quantite', 'date_vente', 'total']
-
-   
+        # Inclure 'client_name' pour l'écriture et 'client' pour la lecture
+        fields = ['id', 'client', 'client_name', 'produit_nom', 'prix_produit', 'quantite', 'date_vente', 'total']
+        # S'assurer que 'client' n'est pas attendu en écriture
+        read_only_fields = ['id', 'total', 'produit_nom', 'prix_produit', 'client']
 
     
 
