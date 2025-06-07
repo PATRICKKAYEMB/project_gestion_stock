@@ -37,7 +37,8 @@ const ProduitGridPage = () => {
     const {data:produitsData} = useQuery({
         queryKey:["produit_list"],
         queryFn: (()=>voir_produict({
-            categorie,sort
+            categorie: categorie==="all" ? "": categorie
+            ,sort
         }))
     })
 
@@ -98,7 +99,7 @@ const ProduitGridPage = () => {
 
                                    
                                     {filter && (
-                                         <div className='w-[160px] px-4 py-5 bg-[blue] absolute top-10 right-0 rounded-md'>
+                                         <div className='w-[160px] px-4 py-5 bg-blue-900 absolute top-10 right-0 rounded-md'>
               
                                     <div className="mb-4">
                                         <Select  onValueChange={(val)=>setCategorie(val)} >
@@ -106,6 +107,7 @@ const ProduitGridPage = () => {
                                             <SelectValue placeholder="Catégorie" />
                                         </SelectTrigger>
                                         <SelectContent>
+                                        <SelectItem value='all'>Toutes les catégories </SelectItem>
                                            { voir_categories.map( (cat,id) =>(
 
                                          
@@ -151,7 +153,7 @@ const ProduitGridPage = () => {
                 
                             <div >
                                         
-                                        <div className="overflow-x-auto grid grid-cols-4  mt-5 gap-3 w-full ">
+                                        <div className="overflow-x-hidden overflow-x-scroll h-[60vh] grid grid-cols-4  mt-5 gap-3 w-full ">
                                          { voir_produit.map((prod,id) => (
                                              <GridView  name={prod.name}
                                                         prix={prod.prix}
@@ -161,6 +163,7 @@ const ProduitGridPage = () => {
                                                         date_ajout={prod.date_ajout}
                                                         date_expiration={prod.date_expiration}
                                                         id={prod.id}
+                                                        image={prod.image}
                                                
                                                />
 

@@ -29,10 +29,9 @@ const VentePage = () => {
 
   const onSubmit =(data)=>{
     const form_data = new FormData()
-    form_data.append("client",data.client)
+    form_data.append("client_name",data.client_name)
     form_data.append("quantite",data.quantite)
     form_data.append("date_vente",data.date_vente)
-    form_data.append("total", data.total)
     form_data.append("produit",id)
     mutation.mutate({formData:form_data, id:id})
  }
@@ -57,10 +56,10 @@ const VentePage = () => {
                     <div>
                       <Label htmlFor="client">Client:</Label>
                       <Input
-                        id="client"
-                        type="number"
+                        id="client_name"
+                        type="text"
                         step="0.01"
-                        {...register("client",{required:true})}
+                        {...register("client_name",{required:true})}
                         className="mt-2 mb-4"
                       />
                     </div>
@@ -86,15 +85,7 @@ const VentePage = () => {
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="total">Total</Label>
-                      <Input
-                        id="total"
-                        type="number"
-                      {...register("total",{required:true})}
-                        className="mt-2 mb-4"
-                      />
-                    </div>
+                  
 
 
                     <button

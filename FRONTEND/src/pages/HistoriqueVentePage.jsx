@@ -26,7 +26,7 @@ const HistoriqueVentePage = () => {
     queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort],
     queryFn: () =>
       voir_vente({
-        categorie,
+        categorie: categorie==="all" ? "" : categorie,
         date_debut,
         date_fin,
         sort,
@@ -88,13 +88,15 @@ const HistoriqueVentePage = () => {
               </div>
 
               {filter && (
-                <div className="absolute right-0 w-[160px] top-8 z-10 bg-blue-400 px-2 py-5 rounded-md">
+                <div className="absolute right-0 w-[160px] top-8 z-10 bg-blue-900 px-2 py-5 rounded-md">
                   <div className="mb-4">
                     <Select onValueChange={(val) => setCategorie(val)}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Catégorie" />
                       </SelectTrigger>
                       <SelectContent>
+
+                      <SelectItem value='all'>Toutes les catégories </SelectItem>
                         {voir_categories.map((cat) => (
                           <SelectItem key={cat.id} value={cat.id}>
                             {cat.name}

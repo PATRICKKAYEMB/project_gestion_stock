@@ -44,7 +44,7 @@ const ApprovisionnerPage = () => {
 
     form_data.append("quantite",data.quantite)
    
-    form_data.append("total",data.total)
+  
     form_data.append("produit",id)
     mutation.mutate({formData:form_data, id:id})
    }
@@ -88,18 +88,6 @@ const ApprovisionnerPage = () => {
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="total">total:</Label>
-                      <Input
-                        id="total"
-                        type="number"
-                        step="0.01"
-                        {...register("total",{required:true})}
-                        className="mt-2 mb-4"
-                      />
-                    </div>
-
-                    
 
                     <button
                       type="submit"

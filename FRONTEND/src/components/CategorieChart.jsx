@@ -13,7 +13,7 @@ const CategorieChart = () => {
     const COLORS=["#6366f1","#885CF1","#EC4899","#108981"]
   return (
     <motion.div
-    className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+    className="bg-blue-900 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
          initial={{opacity:0,y:20}}
          animate={{opacity:1,y:0}}
          transition={{delay:0.2}}

@@ -12,7 +12,7 @@ const SpinnerPost = () => {
     <>
     <FadeLoader
     cssOverride={override}
-    size={40}
+    size={20}
     aria-label='Loading Spinner'
     data-testid="loader"
     

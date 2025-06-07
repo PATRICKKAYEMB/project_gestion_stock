@@ -6,6 +6,7 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { FaTrash } from 'react-icons/fa'
+import { BASEUrl } from '@/api/api'
 
 const DetailProduit = () => {
     const {id} = useParams()
@@ -25,6 +26,15 @@ const DetailProduit = () => {
         },
       });
       
+
+      const statusColors = {
+        red: "bg-red-500",
+        green: "bg-green-500",
+        yellow: "bg-yellow-500",
+        blue: "bg-blue-500",
+        gray: "bg-gray-500",
+        // Ajoute d'autres couleurs si nécessaire
+    };
  
       function onSubmit(id) {
         if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
@@ -88,7 +98,7 @@ const DetailProduit = () => {
 
                         <div className='flex items-center justify-between'> 
                             <h3 className='text-white text-lg '>Status:</h3> 
-                            <span className='w-10 h-4 bg-green-500'>{detail_produit.status}</span>
+                            <span className={`w-8 h-4 rounded-full inline-block ${statusColors[detail_produit.status] || "bg-gray-300"}`}></span>
                         </div>
                         
                         <div className='flex items-center justify-between'> 
@@ -105,7 +115,11 @@ const DetailProduit = () => {
                         </div>
                         
                       </div>
-                      <img className='w-[60%] bg-blue-900' />
+                        <div className='w-[60%] h-[100%]'>
+                              <img src={`${BASEUrl}${detail_produit.image}`} className='w-full bg-blue-900 h-[100%]' />
+
+                        </div>
+                     
 
                 </div>
             </div>

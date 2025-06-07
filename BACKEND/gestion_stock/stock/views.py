@@ -53,6 +53,7 @@ def categorie(request,id_cat=None):
     
 
     elif request.method == "DELETE":
+        
         categorie= get_object_or_404(Categorie,id=id_cat)
         categorie.delete()
         return Response({"message": "produit supprimé"}, status=status.HTTP_204_NO_CONTENT)

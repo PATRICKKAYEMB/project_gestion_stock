@@ -35,17 +35,16 @@ const AjouterPertePage = () => {
     form_data.append("quantite",data.quantite)
     form_data.append("date_perte",data.date_perte)
     form_data.append("description",data.description)
-    form_data.append("total",data.total)
     form_data.append("produit",id)
     mutation.mutate({formData:form_data, id:id})
 
   }
   return (
 
-    <div className='flex w-full'>
+    <main className='flex w-full'>
       <Sidebar/>
 
-       <main className="   flex-1 h-[100vh] bg-[#F1F1F1]">
+       <div className="   flex-1 h-[100vh] bg-[#F1F1F1]">
     
           <Navbar/>
 
@@ -81,17 +80,7 @@ const AjouterPertePage = () => {
                           className="mt-2 mb-4"
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="date">total:</Label>
-                        <Input
-                          id="total"
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          {...register("total", { required: true })}
-                          className="mt-2 mb-4"
-                        />
-                      </div>
+                      
 
                       <div>
                         <Label htmlFor="description ">Description:</Label>
@@ -115,8 +104,8 @@ const AjouterPertePage = () => {
               </div>
 
            </div>
-   </main>
-    </div>
+   </div>
+    </main>
    
   )
 }

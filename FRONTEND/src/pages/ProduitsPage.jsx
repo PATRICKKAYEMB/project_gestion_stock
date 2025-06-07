@@ -45,7 +45,7 @@ const ProduitsPage = () => {
         yellow: "bg-yellow-500",
         blue: "bg-blue-500",
         gray: "bg-gray-500",
-        // Ajoute d'autres couleurs si nécessaire
+       
     };
 
     const voir_categories = categoriesData || []
@@ -96,7 +96,7 @@ const ProduitsPage = () => {
 
                                    
                                     {filter && (
-                                         <div className='w-[160px] px-4 py-5 bg-[blue] absolute top-10 right-0 rounded-md'>
+                                         <div className='w-[160px] px-4 py-5 bg-blue-900 absolute top-10 right-0 rounded-md'>
               
                                     <div className="mb-4">
                                         <Select  onValueChange={(val)=>setCategorie(val)} >
@@ -151,14 +151,15 @@ const ProduitsPage = () => {
                 
                             <div >
                 
-                                        <div className="overflow-x-auto">
+                                        <div className="overflow-x-hidden overflow-x-scroll h-[70vh]">
                 <table className="w-full  mt-4 bg-white ">
                 <thead>
                     <tr className=" bg-blue-900 border-1 border-gray-400">
+                    <th className="  text-white  text-center">N°:</th>
                     <th className="  text-white  text-center">produit</th>
                     <th className="  text-white text-center">Categorie</th>
                     <th className="   text-white text-center">prix</th>
-                    <th className="   text-white  text-center">stock</th>
+                    <th className="   text-white  text-center">quantite</th>
                     
                     <th className=" text-white text-center">Status</th>
                     <th className="   text-white  text-center">Description</th>
@@ -171,16 +172,18 @@ const ProduitsPage = () => {
                 <tbody className=''>
                         {
                         voir_produit.map( (prod,id) => (
-                        <tr className=' hover:bg-amber-900 transition-all ease-in-out round-md border-1 border-gray-400 cursor-pointer' key={id} onClick={()=>(navigate(`/detailProduit/${prod.id}/`))} >
+                        <tr className=' hover:bg-blue-900 transition-all ease-in-out round-md border-1 border-gray-400 cursor-pointer' key={id} onClick={()=>(navigate(`/detailProduit/${prod.id}/`))} >
+                             <td className=" py-1  mb-3  text-center">{prod.id}</td>
                                 <td className=" py-3 mb-3 text-center flex gap-3 items-center justify-center">
+                                <img src={`${BASEUrl}${prod.image}`} alt="" className='w-10 h-10 rounded-full' />
                                     <span> {prod.name}</span>
-                                    <img src={`${BASEUrl}${prod.image}`} alt="" className='w-6 h-6 rounded-full' />
+                                   
                                     
                                     </td>
-                                <td className=" py-1  mb-3  text-center">{prod.categorie.name}</td>
+                                <td className=" py-1  mb-3  text-center">{prod.categorie}</td>
                                
                                 <td className="py-1  mb-3  text-center">{prod.prix}</td>
-                                <td className="py-1  mb-3  text-center">{prod.quantite}</td>
+                                <td className="py-1  mb-3  text-center text-black">{prod.quantite}</td>
                                 
 
                                 <td className="py-1  mb-3  text-center">
