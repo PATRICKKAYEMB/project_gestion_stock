@@ -16,6 +16,9 @@ import ProduitGridPage from '../pages/ProduitGridPage'
 import ProtectRoute from '@/auth/ProtectRoute'
 import Login from '@/auth/Login'
 import DetailProduit from '@/pages/DetailProduit'
+import CategoriePage from '@/pages/CategoriePage'
+import AjouterCategoriePage from '@/pages/AjouterCategoriePage'
+import ModifierCategoriePage from '@/pages/ModifierCategoriePage'
 
 
 const RoutingPage = () => {
@@ -37,6 +40,9 @@ const RoutingPage = () => {
         <Route path='/ProduitGrid' element={ <ProtectRoute>  <ProduitGridPage/> </ProtectRoute>}/>
         <Route path='/dashbord' element={ <ProtectRoute> <DashbordPage/> </ProtectRoute>}/>
         <Route path='/' element={<Login/>}/>
+        <Route path='/categorie' element={<ProtectRoute><CategoriePage/></ProtectRoute>} />
+        <Route path='/ajouterCategorie' element={<ProtectRoute><AjouterCategoriePage/></ProtectRoute>} />
+        <Route path='/modifierCategorie' element={<ProtectRoute><ModifierCategoriePage/></ProtectRoute>} />
       </Routes>
   )
 }

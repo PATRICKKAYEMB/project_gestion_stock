@@ -44,6 +44,14 @@ const Sidebar = ({toggle,setToggle}) => {
               </NavLink>
           </li>
 
+           <li >
+             <NavLink to="/categorie" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <LayoutDashboard className='mr-3'/>
+              {
+                 !toggles &&  <span className='text-left'> Categorie</span>
+              }
+              </NavLink>
+          </li>
+
 
 
           <li >
