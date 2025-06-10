@@ -36,6 +36,12 @@ def get_user(request):
 def categorie(request,id_cat=None):
 
     if request.method == "GET":
+        if id_cat is not None:
+            categorie= get_object_or_404(Categorie,id=id_cat)
+            serializer= CategorieSerializer(categorie)
+
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        
         categories=Categorie.objects.all()
         serializer=CategorieSerializer(categories,many=True)
 
@@ -48,7 +54,9 @@ def categorie(request,id_cat=None):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_200_OK)
-        return Response({"message":"erreur vérifier vos données"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+          print(serializer.errors)
+          return Response({"message":"erreur vérifier vos données"}, status=status.HTTP_400_BAD_REQUEST)
 
     
 

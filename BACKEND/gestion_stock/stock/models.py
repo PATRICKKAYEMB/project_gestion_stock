@@ -58,7 +58,7 @@ class Produit (models.Model):
         
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # D'abord enregistrer le produit
+        super().save(*args, **kwargs) 
 
         # Alerte si la quantité est faible
         if self.quantite <= 10:

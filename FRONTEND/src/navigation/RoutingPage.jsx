@@ -42,7 +42,7 @@ const RoutingPage = () => {
         <Route path='/' element={<Login/>}/>
         <Route path='/categorie' element={<ProtectRoute><CategoriePage/></ProtectRoute>} />
         <Route path='/ajouterCategorie' element={<ProtectRoute><AjouterCategoriePage/></ProtectRoute>} />
-        <Route path='/modifierCategorie' element={<ProtectRoute><ModifierCategoriePage/></ProtectRoute>} />
+        <Route path='/modifierCategorie/:id' element={<ProtectRoute><ModifierCategoriePage/></ProtectRoute>} />
       </Routes>
   )
 }
