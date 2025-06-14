@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { BellIcon, LogOut, LogOutIcon, LucideLogOut, MenuIcon } from 'lucide-react'
-import { FaBeer } from 'react-icons/fa'
+import { BellIcon, Boxes, LogOut, LogOutIcon, LucideLogOut, MenuIcon } from 'lucide-react'
+import { FaBeer, FaBoxOpen, FaChartBar, FaDesktop, FaMoneyBillWave, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa'
+import { MdDashboard, MdOutlineMoney, MdOutlineShoppingCart, MdReportProblem } from 'react-icons/md';
 
 import { useNavigate } from 'react-router-dom'; 
 import { NavLink, Navigate} from 'react-router-dom';
 import {ChefHat, Eye, DollarSign, Wallet, PlusCircle, FileText, ArrowDownCircleIcon, ArrowBigDown, ArrowDown, ArrowLeft, ArrowRightIcon, LayoutDashboard } from 'lucide-react';
 import { FaDirections } from 'react-icons/fa';
-import { BiMenu } from 'react-icons/bi';
+import { BiMenu, BiTransfer } from 'react-icons/bi';
 import { logout } from '@/auth/authService';
+import { TbDashboard, TbDashboardFilled } from 'react-icons/tb';
 
 
 const Sidebar = ({toggle,setToggle}) => {
@@ -37,7 +39,7 @@ const Sidebar = ({toggle,setToggle}) => {
         <li>
         
           <li >
-             <NavLink to="/dashbord" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <LayoutDashboard className='mr-3'/>
+             <NavLink to="/dashbord" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white">   <FaDesktop className='mr-3' size={22}/>
               {
                  !toggles &&  <span className='text-left'> Dashbord</span>
               }
@@ -45,17 +47,15 @@ const Sidebar = ({toggle,setToggle}) => {
           </li>
 
            <li >
-             <NavLink to="/categorie" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <LayoutDashboard className='mr-3'/>
+             <NavLink to="/categorie" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <Boxes className='mr-3' size={22}/> 
               {
                  !toggles &&  <span className='text-left'> Categorie</span>
               }
               </NavLink>
           </li>
 
-
-
           <li >
-             <NavLink to="/produits" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <LayoutDashboard className='mr-3'/>
+             <NavLink to="/produits" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white">           <FaBoxOpen className='mr-3' size={22}/> 
               {
                  !toggles &&  <span className='text-left'> Produits</span>
               }
@@ -67,21 +67,21 @@ const Sidebar = ({toggle,setToggle}) => {
               
                     <button onClick={() => handleToggle('transaction')} className="flex relative text-white font-bold hover:text-white items-center w-full px-4 py-1 text-left hover:bg-blue-950">
                     
-                      <ChefHat className="mr-3" />
+                     <BiTransfer className='mr-3' size={22}/>
                       
-                      {  !toggles &&    <span>Transactions</span> } {openMenu==="transaction"? !toggles&& <ArrowDown className='absolute right-[20px]' />: !toggles && <ArrowRightIcon className='absolute right-[20px]' />}   
+                      {  !toggles &&    <span>Transactions</span> } {openMenu==="transaction"? !toggles&& <ArrowDown className='absolute right-[20px]' />: !toggles &&  <ArrowRightIcon className='absolute right-[20px]' />}   
                     </button>
          
           <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${openMenu === 'transaction' ? "max-h-40" : "max-h-0"}`}>
-            <NavLink to="/historiqueVente" onClick={handleLinkClick} className="md:pl-[70px] py-2 hover:bg-blue-950 text-white hover:text-white">Historique Vente</NavLink>
-            <NavLink to="/historiqueAchat" onClick={handleLinkClick} className=" md:pl-[70px] py-2 hover:bg-blue-950 text-white hover:text-white">Historique Achat</NavLink>
+            <NavLink to="/historiqueVente" onClick={handleLinkClick} className="md:pl-[70px] py-2 hover:bg-blue-950 text-white flex items-center  gap-2 hover:text-white">  <MdOutlineShoppingCart/>  Historique Vente</NavLink>
+            <NavLink to="/historiqueAchat" onClick={handleLinkClick} className=" md:pl-[70px] py-2 hover:bg-blue-950 text-white hover:text-white gap-2 flex items-center "> <MdOutlineMoney/>  Historique Achat</NavLink>
             
           </div>
 
 
 
           <li >
-             <NavLink to="/statistique" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <LayoutDashboard className='mr-3'/>
+             <NavLink to="/statistique" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white"> <FaChartBar className='mr-3' size={22}/>
               {
                  !toggles &&  <span className='text-left'> Statistique</span>
               }
@@ -90,26 +90,10 @@ const Sidebar = ({toggle,setToggle}) => {
 
 
           <li >
-            
-            
-
-           <NavLink to="/notification" onClick={handleToggle} className=' mt-4 mb-2 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white' >
-           
-                    <BellIcon className='mr-3'/>
-                    {
-                   !toggles && 
-                 <span className=" text-left">Notification</span>
-                     }
-            </NavLink>
-          
-            
-          </li>
-
-          <li >
          
 
           
-         <NavLink to="/voirPerte" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white">  <ChefHat className="mr-3" />
+         <NavLink to="/voirPerte" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-blue-950 text-left items-center px-4 py-1 text-white font-bold hover:text-white">  <MdReportProblem className="mr-3" size={22}/>
           {
              !toggles &&  <span className='text-left'> Perte</span>
           }

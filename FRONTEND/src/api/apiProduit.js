@@ -11,12 +11,13 @@ export async function countProduit(){
 }
 
 
-export async function voir_produict({categorie,sort}={}){
+export async function voir_produict({categorie,sort,name}={}){
     try {
         const params ={}
        
         if (categorie) params.categorie =categorie
         if (sort) params.sort = sort
+        if (name) params.name=name
 
         const response =await api.get("produit/", {params})
         return response.data 

@@ -53,3 +53,24 @@ export async function detailCategorie(id) {
         throw error
     }
 }
+
+
+export async function categorieVente(dateDebut,dateFin) {
+  try {
+    const response = await api.get("categorieVente/",{
+        params: {dateDebut, dateFin}
+    })  
+    return response.data
+  } catch (error) {
+    console.error("Erreur lors du chargement des catégories", error)
+    throw error
+  }
+}
+
+
+export async function ventesMensuelles(dateDebut, dateFin) {
+  const response = await api.get("ventesMensuelles/", {
+    params: { dateDebut, dateFin }
+  });
+  return response.data;
+}

@@ -1,12 +1,11 @@
 // 8. src/auth/LoginPage.jsx
-import { useState } from 'react';
-import axios from 'axios';
+
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { connexion } from "../api/login"
 
 
-import { useNavigate } from 'react-router-dom';
+
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 
@@ -14,36 +13,34 @@ import SmallSpinnerText from '@/components/SmallSpinnerText';
 
 import { Lock, LogIn, User } from 'lucide-react';
 
-import React from 'react'
+import React, { useContext } from 'react'
 import SmallSpinner from '@/components/SmallSpinner';
 import { toast } from 'react-toastify';
+import { AppContext } from '@/context/AppContext';
+
 
 const Login = () => {
 
     
-  const {register, handleSubmit, formState} =useForm()
-  const {errors}=formState
-  const navigate=useNavigate()
+  const {register, handleSubmit} =useForm()
+ 
 
-  const mutation=useMutation({
+  
+  const {HandleSucces,HandleUser} = useContext(AppContext)
+  const mutation=useMutation({ 
     mutationFn:(data)=>connexion(data),
     onSuccess: (data) => {
-      console.log("Réponse du backend :", data); 
-      if (data && data.access && data.refresh) { // Vérifie si `access` et `refresh` existent
-          localStorage.setItem("access", data.access);
-          localStorage.setItem("refresh", data.refresh);
-         toast.success("vous etes connecter")
-          navigate("/DashBord");
-      } else {
-          toast.error("Données manquantes dans la réponse");
-          console.error("Données manquantes dans la réponse", data);
-      }
-  },
+     
+      HandleSucces(data)
+      HandleUser(data)
+
+    },
+
     onError:(error)=>{
           toast.error(error.message)
     }
 
-  })
+})
 
   function onsubmit(data){
     mutation.mutate(data)

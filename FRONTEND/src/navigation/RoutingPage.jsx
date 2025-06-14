@@ -19,6 +19,7 @@ import DetailProduit from '@/pages/DetailProduit'
 import CategoriePage from '@/pages/CategoriePage'
 import AjouterCategoriePage from '@/pages/AjouterCategoriePage'
 import ModifierCategoriePage from '@/pages/ModifierCategoriePage'
+import PanierPage from '@/pages/PanierPage'
 
 
 const RoutingPage = () => {
@@ -40,6 +41,7 @@ const RoutingPage = () => {
         <Route path='/ProduitGrid' element={ <ProtectRoute>  <ProduitGridPage/> </ProtectRoute>}/>
         <Route path='/dashbord' element={ <ProtectRoute> <DashbordPage/> </ProtectRoute>}/>
         <Route path='/' element={<Login/>}/>
+        <Route path='/panier' element={<ProtectRoute><PanierPage/></ProtectRoute>}/>
         <Route path='/categorie' element={<ProtectRoute><CategoriePage/></ProtectRoute>} />
         <Route path='/ajouterCategorie' element={<ProtectRoute><AjouterCategoriePage/></ProtectRoute>} />
         <Route path='/modifierCategorie/:id' element={<ProtectRoute><ModifierCategoriePage/></ProtectRoute>} />

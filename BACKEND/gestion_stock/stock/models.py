@@ -33,7 +33,6 @@ class Produit (models.Model):
     categorie=models.ForeignKey(Categorie, related_name="Produits",on_delete=models.CASCADE)
     prix=models.PositiveIntegerField()
     date_ajout=models.DateField()
-    date_expiration=models.DateField()
     quantite=models.IntegerField()
     description=models.TextField()
     image = models.ImageField(upload_to='produits/', blank=True, null=True)
@@ -78,23 +77,7 @@ class Produit (models.Model):
             )
 
         # Alerte si la date d'expiration est proche (moins de 7 jours)
-        jours_restant = (self.date_expiration - now().date()).days
-        if jours_restant <= 7:
-            Notification.objects.create(
-                produit=self,
-                type_alerte="Expiration proche",
-                description=f"Le produit '{self.name}' expire dans {jours_restant} jours.",
-                date_alerte=now().date()
-            )
-
-            send_mail(
-                subject="Alerte: Produit bientôt expiré",
-                message=f"Le produit '{self.name}' va expirer dans {jours_restant} jours.",
-                from_email="ton_email@exemple.com",
-                recipient_list=["admin@exemple.com"],
-                fail_silently=True
-            )
-            
+      
              
 class Client(models.Model):
     name=models.CharField( max_length=50)

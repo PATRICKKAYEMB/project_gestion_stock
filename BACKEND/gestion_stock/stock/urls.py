@@ -1,10 +1,9 @@
 from django.urls import path
+from .views import MyTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-from .views import (get_user,produit,categorie,countAchat,countPerte,countVente,historiqueAchat,
+
+from .views import (get_user,produit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,historiqueVente,venteProduit,achatProduit,perteProduit,notification,countNotification)
 
 
@@ -20,7 +19,7 @@ urlpatterns = [
    path("categorie/<int:id_cat>/",categorie, name="categorie"),
 
 
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path("countProduit/",countVente, name="countProduit"),
@@ -33,11 +32,13 @@ urlpatterns = [
     path("historiqueAchat/", historiqueAchat, name="historiqueAchat"),
     path("historiquePerte/", historiquePerte, name="historiquePerte"),
 
-    path("venteProduit/<int:id_prod>/", venteProduit, name="venteProduit"),
+      path("venteProduit/", venteProduit, name="venteProduit"),   
     path("achatProduit/<int:id_prod>/", achatProduit, name="achatProduit"),
     path("perteProduit/<int:id_prod>/", perteProduit, name="perteProduit"),
 
     path("notification/",notification, name="notification"),
-    path("countNotification/", countNotification, name="countNotification")
+    path("countNotification/", countNotification, name="countNotification"),
+    path("categorieVente/",categorieVente,name="categorieVente"),
+    path("ventesMensuelles/", ventes_par_jour, name="ventes-par-mois"),
   
 ]

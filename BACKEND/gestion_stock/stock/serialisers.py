@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import (
     User,
     PerteProduit,
@@ -9,7 +10,7 @@ from .models import (
     Categorie,
     Client
 )
-from django.contrib.auth import get_user_model,authenticate
+from django.contrib.auth import get_user_model
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,6 +23,18 @@ class UserSerializer(serializers.ModelSerializer):
             "password":{"write_only":True}
         }
 
+class  MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self,attrs):
+
+        data = super().validate(attrs)
+
+        data["user"]= {
+            "id":self.user.id,
+            "username":self.user.username,
+           
+        }
+
+        return data
 
 class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,8 +56,8 @@ class ProduitSerializer(serializers.ModelSerializer):
         return obj.status_quantite()
 
     def get_categorie_name(self, obj):
-        # Assure-toi que ton modèle Categorie a bien un champ "nom"
-        return obj.categorie.name  # 
+       
+        return obj.categorie.name  
 
 
 class PerteProduitSerializer(serializers.ModelSerializer):

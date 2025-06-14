@@ -71,7 +71,7 @@ const AjouterProduitPage = () => {
        
               <div className='w-full max-w-md  bg-white p-6 mt-6 rounded-2xl shadow-lg'>
 
-              <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Ajouter un produit</h2>
+              <h2 className="text-2xl font-bold text-center mb-5 text-gray-800">Ajouter un produit</h2>
                   <form onSubmit={handleSubmit(onSubmit)}  className="space-y-5">
                   
                   <div className='flex items-center justify-center gap-2'>
@@ -82,7 +82,7 @@ const AjouterProduitPage = () => {
                                 type="text"
                                
                                 {...register("name",{required:true})}
-                                className="mt-2 mb-4"
+                                className=""
                               />
                             </div>
 
@@ -93,7 +93,7 @@ const AjouterProduitPage = () => {
                                 type="file"
                                 {...register("image",{required:true})}
                                 
-                                className="mt-2 mb-4"
+                                className=""
                               />
                             </div>
                   </div>
@@ -130,7 +130,7 @@ const AjouterProduitPage = () => {
                               step="0.01"
                               {...register("prix",{required:true})}
                               
-                              className="mt-2 mb-4"
+                              className=""
                             />
                           </div>  
 
@@ -142,7 +142,7 @@ const AjouterProduitPage = () => {
                               step="0.01"
                               {...register("quantite",{required:true})}
                               
-                              className="mt-2 mb-4"
+                              className=""
                             />
                           </div>
 
@@ -150,26 +150,17 @@ const AjouterProduitPage = () => {
                    
 
                    <div className='flex items-center justify-center gap-2'>
-                      <div>
-                          <Label htmlFor="date">Date ajout</Label>
+                      <div className='flex w-full'>
+                          <Label htmlFor="date" className='w-[100px]'>Date ajout</Label>
                           <Input
                             id="date_ajout"
                             type="date"
                             {...register("date_ajout",{ required:true})}
-                            className="mt-2 mb-4"
+                            className="mt-2 mb-2"
                           />
                         </div>
 
-                        <div>
-                      <Label htmlFor="date">Date expiration</Label>
-                      <Input
-                        id="date_expiration"
-                        type="date"
-                        {...register("date_expiration",{required:true})}
-                      
-                        className="mt-2 mb-4"
-                      />
-                    </div>
+                       
 
                    </div>
                   
@@ -188,7 +179,10 @@ const AjouterProduitPage = () => {
                       type="submit"
                       className="w-full mt-2 bg-blue-900 text-white py-2 rounded hover:bg-blue-700 transition"
                     >
-                          Ajouter
+                      {
+                        mutation.isPending?"en cours...":"Ajouter"
+                      }
+                          
                     </button>
                   </form>
             </div>

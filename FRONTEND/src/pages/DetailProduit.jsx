@@ -2,13 +2,17 @@ import { Detail_produit, supprimer_produit } from '@/api/apiProduit'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { FaTrash } from 'react-icons/fa'
 import { BASEUrl } from '@/api/api'
+import { AppContext } from '@/context/AppContext'
+
 
 const DetailProduit = () => {
+
+  const{ajouterAuPanier}=useContext(AppContext)
     const {id} = useParams()
    
     const navigate=useNavigate()
@@ -67,7 +71,16 @@ const DetailProduit = () => {
 
                            </div>
                            <div className='flex gap-2'>
-                                <button  className='px-2 py-2 bg-blue-500 shadow-md rounded-md' onClick={()=>(navigate(`/vente/${detail_produit.id}/`))}>vendre</button>
+                                <button
+  className='px-2 py-2 bg-blue-500 shadow-md rounded-md'
+  onClick={() => {
+    ajouterAuPanier(detail_produit)
+    toast.success("Produit ajouté au panier !")
+  }}
+>
+  ajouter au panier
+</button>
+
                                 <button className='px-2 py-2 bg-green-500 shadow-md rounded-md' onClick={()=>(navigate(`/approvisionner/${detail_produit.id}/`))}>approvisionner</button>
                                 <button  className='px-2 py-2 bg-yellow-500 shadow-md rounded-md' onClick={()=>(navigate(`/modifierProduit/${detail_produit.id}/`))}>modification</button>
                             

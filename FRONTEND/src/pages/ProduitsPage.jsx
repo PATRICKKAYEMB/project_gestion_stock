@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Main from '../components/Main'
 import Produits from '../components/Produits'
 import Navbar from '../components/Navbar'
-import { BiAbacus, BiCategory, BiFilter, BiFilterAlt, BiSearch } from 'react-icons/bi'
+import { BiAbacus, BiBasket, BiCategory, BiDotsVerticalRounded, BiFilter, BiFilterAlt, BiSearch } from 'react-icons/bi'
 import { LiaStackExchange, LiaStarHalf } from 'react-icons/lia'
 import { TbCategory } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +19,11 @@ import { useQuery } from '@tanstack/react-query'
 import { voir_categorie } from '@/api/apiCategorie'
 import { voir_produict } from '@/api/apiProduit'
 import { BASEUrl, BaseUrl } from '@/api/api'
+import { DotIcon, LayoutDashboard, LayoutDashboardIcon, LayoutGrid ,List} from 'lucide-react'
+import { AppContext } from '@/context/AppContext'
+import { FaThLarge, FaThList } from 'react-icons/fa'
+import { MdAdd, MdOutlineShoppingCart } from 'react-icons/md'
+
 
 
 const ProduitsPage = () => {
@@ -31,11 +36,15 @@ const ProduitsPage = () => {
         queryFn: voir_categorie
     })
 
+    const [search,setSearch]= useState("")
+
+    const {ajouterAuPanier}= useContext(AppContext)
     const {data:produitsData} = useQuery({
-        queryKey:["produit_list",categorie,sort],
+        queryKey:["produit_list",categorie,sort,search],
         queryFn: (()=>voir_produict({
             categorie: categorie === "all" ? "" : categorie,
-            sort
+            sort,
+            name:search
         }))
     })
 
@@ -62,7 +71,7 @@ const ProduitsPage = () => {
                    
 
                     <div  className='float-right bg-blue-900 px-4 py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
-                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white text-lg'>ajouter Produit</h3>
+                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white flex items-center justify-center  text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
                         
                     </div>
                         <div className='px-3 py-1 bg-white mt-16'>
@@ -72,7 +81,7 @@ const ProduitsPage = () => {
                             <div className='flex items-center justify-between mt-5 '>
                                 <div className='border-2 flex justify-center items-center px-2 py-1 border-amber-900'> 
                                     
-                                    <input type="text"  className='outline-0 border-0 ml-1 'placeholder='search...'/>
+                                    <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}  className='outline-0 border-0 ml-1 'placeholder='search...'/>
                                     <BiSearch/>
                                     
                                 </div>
@@ -87,11 +96,16 @@ const ProduitsPage = () => {
                 
                                     
                                     <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' onClick={()=>(navigate("/produits"))}>
-                                            <BiCategory size={20} color='white' />
+                                           
+                                            <List size={20} color='white' />
+                                            
                                     </div>
                 
                                     <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'onClick={()=>(navigate("/ProduitGrid"))} >
-                                            <TbCategory size={20} color='white' />
+                                         
+                                           <LayoutGrid size={20} color='white'/>
+                                          
+                                           
                                     </div>
 
                                    
@@ -154,8 +168,8 @@ const ProduitsPage = () => {
                                         <div className="overflow-x-hidden overflow-x-scroll h-[70vh]">
                 <table className="w-full  mt-4 bg-white ">
                 <thead>
-                    <tr className=" bg-blue-900 border-1 border-gray-400">
-                    <th className="  text-white  text-center">N°:</th>
+                    <tr className=" bg-blue-900 border-1 w-full border-gray-400">
+                    <th className="  text-white  text-center">N°</th>
                     <th className="  text-white  text-center">produit</th>
                     <th className="  text-white text-center">Categorie</th>
                     <th className="   text-white text-center">prix</th>
@@ -163,8 +177,10 @@ const ProduitsPage = () => {
                     
                     <th className=" text-white text-center">Status</th>
                     <th className="   text-white  text-center">Description</th>
-                    <th className="   text-white text-center">date ajout</th>
-                    <th className="   text-white text-center">date d'expiration</th>
+                   
+                    <th className="   text-white text-center">Date Ajout</th>
+                   
+                    <th className="   text-white text-center">Action</th>
 
                     </tr>
                 </thead>
@@ -172,7 +188,7 @@ const ProduitsPage = () => {
                 <tbody className=''>
                         {
                         voir_produit.map( (prod,id) => (
-                        <tr className=' hover:bg-blue-900 transition-all ease-in-out round-md border-1 border-gray-400 cursor-pointer' key={id} onClick={()=>(navigate(`/detailProduit/${prod.id}/`))} >
+                        <tr className='  transition-all ease-in-out round-md border-1 border-gray-400 ' key={id}  >
                              <td className=" py-1  mb-3  text-center">{prod.id}</td>
                                 <td className=" py-3 mb-3 text-center flex gap-3 items-center justify-center">
                                 <img src={`${BASEUrl}${prod.image}`} alt="" className='w-10 h-10 rounded-full' />
@@ -192,8 +208,14 @@ const ProduitsPage = () => {
                                 </td>
 
                                 <td className=" py-1  mb-3  text-center">{prod.description}</td>
-                                <td className="py-1  mb-3  text-center">{prod.date_expiration}</td>
+                               
                                 <td className="py-1  mb-3   text-center">{prod.date_ajout}</td>
+                                 <td className="py-1  mb-3   items-center justify-end pr-4 flex gap-2">
+
+                                   
+                                        <MdOutlineShoppingCart size={22} className='cursor-pointer mr-5' onClick={()=> ajouterAuPanier(prod)} />
+                                  <BiDotsVerticalRounded size={22} className='cursor-pointer' onClick={()=>(navigate(`/detailProduit/${prod.id}/`))}/>
+                                 </td>
                                
                         </tr>
                             

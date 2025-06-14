@@ -1,8 +1,13 @@
 from django.shortcuts import render,get_object_or_404
+from django.db.models.functions import TruncDay
 from django import views
+from django.db import transaction
+from django.db.models import Sum, F
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .serialisers import( UserSerializer,
                          ClientSerializer,
                          VenteProduitSerializer,
+                         MyTokenObtainPairSerializer,
                          CategorieSerializer,
                          PerteProduitSerializer,
                          ProduitSerializer,
@@ -15,8 +20,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User,PerteProduit,VenteProduit,Produit,Categorie,ApprovisionnerProduit,Client,Notification
 
-# Create your views here.
 
+
+
+
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 @api_view(["GET"])
@@ -103,6 +114,7 @@ def produit(request,id_prod=None):
         categorie_name =request.query_params.get("categorie")
         date_debut=request.query_params.get("date_debut")
         date_fin=request.query_params.get("date_fin")
+        name=request.query_params.get("name")
 
         sort_by=request.query_params.get("sorte")
 
@@ -112,6 +124,11 @@ def produit(request,id_prod=None):
             produit =produit.filter(categorie__id=categorie_name)
         if date_debut and date_fin:
             produit=produit.filter(date__range=[date_debut,date_fin])
+
+        if name:
+            produit= produit.filter(name__icontains=name)
+       
+    
 
         if sort_by == "recent":
             produit =produit.order_by("-date_ajout")
@@ -313,42 +330,54 @@ def historiquePerte(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def venteProduit(request, id_prod):
-    produit = get_object_or_404(Produit, id=id_prod)
 
-    # Le serializer reçoit toujours le nom du client comme une chaîne de caractères
-    serializer = VenteProduitSerializer(data=request.data)
-    if serializer.is_valid():
-        quantite = serializer.validated_data["quantite"]
-        client_name = serializer.validated_data["client"] # Récupère le nom du client (chaîne)
-        date_vente = serializer.validated_data["date_vente"]
+def venteProduit(request):
+    data = request.data
+    print("Données reçues :", data)  # Ajout debug
+    produits = data.get("produits", [])
+    client_name = data.get("client")
+    date_vente = data.get("date_vente")
 
-        if quantite > produit.quantite:
-            return Response({"message": "La quantité demandée est supérieure au stock disponible"}, status=400)
+    if not produits:
+        return Response({"message": "Aucun produit fourni"}, status=400)
 
-        # Étape clé : Tente de récupérer un client par son 'name'.
-        # Si aucun client n'existe avec ce 'name', un nouveau sera créé.
-        # client_obj est l'instance du Client, created est un booléen (True si créé, False si récupéré)
-        client_obj, created = Client.objects.get_or_create(name=client_name) # <-- Utilise 'name' ici
+    if not client_name:
+        return Response({"message": "Client manquant"}, status=400)
 
-        total = produit.prix * quantite
-        vente = VenteProduit.objects.create(
-            produit=produit,
-            quantite=quantite,
-            total=total,
-            client=client_obj, # <-- Assigne l'objet Client (et non la chaîne de caractères)
-            date_vente=date_vente
-        )
+    client_obj, _ = Client.objects.get_or_create(name=client_name)
 
-        # Mets à jour le stock
-        produit.quantite -= quantite
-        produit.save()
+    try:
+        with transaction.atomic():
+            for item in produits:
+                prod_id = item.get("id")
+                quantite = item.get("quantite")
 
-        return Response({"vente_id": vente.id, "message": "Vente enregistrée avec succès"}, status=201)
-    else:
-        print(serializer.errors)
-        return Response(serializer.errors, status=400)
-   
+                if not prod_id or not quantite:
+                    return Response({"message": "Données produit invalides"}, status=400)
+
+                produit = get_object_or_404(Produit, id=prod_id)
+
+                if produit.quantite < quantite:
+                    raise ValueError(f"Stock insuffisant pour le produit {produit.name}")
+
+                total = produit.prix * quantite
+
+                VenteProduit.objects.create(
+                    produit=produit,
+                    quantite=quantite,
+                    total=total,
+                    client=client_obj,
+                    date_vente=date_vente
+                )
+
+                produit.quantite -= quantite
+                produit.save()
+
+        return Response({"message": "Vente enregistrée avec succès"}, status=201)
+
+    except ValueError as e:
+        return Response({"message": str(e)}, status=400)
+ 
 
 
 
@@ -429,5 +458,59 @@ def notification(request):
     notification=Notification.objects.all()
     serializer= NotificationSerializer(notification,many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
+
+
+@api_view(['GET'])
+def categorieVente(request):
+    dateDebut = request.GET.get('dateDebut')
+    dateFin = request.GET.get('dateFin')
+    categories = request.GET.getlist('categories[]')  # liste ['Electro', 'Mode']
+
+    ventes = VenteProduit.objects.all()
+
+    if dateDebut and dateFin:
+        ventes = ventes.filter(date_vente__range=[dateDebut, dateFin])
+
+    if categories:
+        ventes = ventes.filter(produit__categorie__name__in=categories)
+
+    data = (
+        ventes
+        .values(name=F("produit__categorie__name"))
+        .annotate(value=Sum("total"))
+        .order_by("-value")
+    )
+
+    return Response(data)
+
+
+
+
+@api_view(['GET'])
+def ventes_par_jour(request):
+    dateDebut = request.GET.get('dateDebut')
+    dateFin = request.GET.get('dateFin')
+
+    ventes = VenteProduit.objects.all()
+
+    if dateDebut and dateFin:
+        ventes = ventes.filter(date_vente__range=[dateDebut, dateFin])
+
+    ventes_par_jour = (
+        ventes.annotate(jour=TruncDay("date_vente"))
+        .values("jour")
+        .annotate(sales=Sum("total"))
+        .order_by("jour")
+    )
+
+    data = [
+        {"name": v["jour"].strftime("%d %b"), "sales": v["sales"]}
+        for v in ventes_par_jour
+    ]
+
+    return Response(data)
 
 

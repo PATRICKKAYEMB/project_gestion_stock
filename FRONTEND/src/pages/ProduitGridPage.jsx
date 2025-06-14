@@ -19,6 +19,8 @@ import { voir_produict } from '@/api/apiProduit'
 import { BASEUrl, BaseUrl } from '@/api/api'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
+import { FaThLarge, FaThList } from 'react-icons/fa'
+import { LayoutGrid, List } from 'lucide-react'
 
 
 
@@ -28,6 +30,7 @@ const ProduitGridPage = () => {
     const [filter,setFilter] = useState(false)
     const [categorie,setCategorie]= useState("")
     const [sort,setSort] = useState("")
+    const [search,setSearch]= useState('')
 
     const {data:categoriesData} = useQuery({
         queryKey:["categorie_list",categorie,sort],
@@ -35,10 +38,11 @@ const ProduitGridPage = () => {
     })
 
     const {data:produitsData} = useQuery({
-        queryKey:["produit_list"],
+        queryKey:["produit_list",categorie,sort,search],
         queryFn: (()=>voir_produict({
             categorie: categorie==="all" ? "": categorie
-            ,sort
+            ,sort,
+            name:search
         }))
     })
 
@@ -75,7 +79,7 @@ const ProduitGridPage = () => {
                             <div className='flex items-center justify-between mt-5 '>
                                 <div className='border-2 flex justify-center items-center px-2 py-1 border-amber-900'> 
                                     
-                                    <input type="text"  className='outline-0 border-0 ml-1 'placeholder='search...'/>
+                                    <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)} className='outline-0 border-0 ml-1 'placeholder='search...'/>
                                     <BiSearch/>
                                     
                                 </div>
@@ -90,11 +94,15 @@ const ProduitGridPage = () => {
                 
                                     
                                     <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' onClick={()=>(navigate("/produits"))}>
-                                            <BiCategory size={20} color='white' />
+                                            
+                                           
+                                            <List size={20} color='white'/>
                                     </div>
                 
                                     <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'onClick={()=>(navigate("/ProduitGrid"))} >
-                                            <TbCategory size={20} color='white' />
+                                            
+                                           
+                                            <LayoutGrid size={20} color='white'/>
                                     </div>
 
                                    
