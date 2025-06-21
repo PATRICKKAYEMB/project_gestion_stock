@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import SideBarMobile from '@/components/SideBarMobile';
   	
 const HistoriqueVentePage = () => {
   const [date_debut, setDate_debut] = useState('');
@@ -47,11 +48,12 @@ const HistoriqueVentePage = () => {
       <Sidebar />
       <main className="flex-1 h-screen bg-[#F5F5F5] relative">
         <Navbar />
+        <SideBarMobile/>
 
-        <div className="w-full flex items-center justify-between mt-8 px-6 mb-2 py-2">
+        <div className="w-full flex items-center justify-between md:mt-8 mt-15 px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Mes Ventes</h3>
 
-          <div className="flex items-center cursor-pointer justify-center bg-white px-4 py-2 shadow rounded-md gap-3">
+          <div className="flex items-center cursor-pointer justify-center bg-white md:px-4 md:py-2 px-3 py-1 shadow rounded-md gap-3">
             <Download />
             <span>Exporter</span>
           </div>
@@ -59,23 +61,37 @@ const HistoriqueVentePage = () => {
 
         <div className="px-6 w-full">
           <div className="w-full h-[100%] bg-white px-4 shadow-2xl rounded-tl-2xl rounded-tr-2xl pt-5">
-            <div className="flex items-center justify-between mt-5 relative">
+            <div className="flex  items-center justify-between mt-5 relative">
               <div>
-                <div className="flex items-center gap-4">
-                  Du:{' '}
-                  <input
-                    type="date"
-                    onChange={(e) => setDate_debut(e.target.value)}
-                    placeholder="date"
-                    className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
-                  />
-                  Au:{' '}
-                  <input
-                    type="date"
-                    onChange={(e) => setDate_fin(e.target.value)}
-                    placeholder="date"
-                    className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
-                  />
+                <div className="md:flex  items-center gap-4">
+
+                  <div className='mb-3 md:mb-0'>
+                        <span>
+                            Du:
+                      </span>
+                      
+                      <input
+                        type="date"
+                        onChange={(e) => setDate_debut(e.target.value)}
+                        placeholder="date"
+                        className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
+                      />
+
+                  </div>
+                 
+
+                  <div>
+
+                     <span>Au:</span> 
+                      <input
+                        type="date"
+                        onChange={(e) => setDate_fin(e.target.value)}
+                        placeholder="date"
+                        className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
+                      />
+
+                  </div>
+                
                 </div>
               </div>
 
@@ -88,7 +104,7 @@ const HistoriqueVentePage = () => {
               </div>
 
               {filter && (
-                <div className="absolute right-0 w-[160px] top-8 z-10 bg-blue-900 px-2 py-5 rounded-md">
+                <div className="absolute right-0 w-[160px] top-14 md:top-8 z-10 bg-blue-900 px-2 py-5 rounded-md">
                   <div className="mb-4">
                     <Select onValueChange={(val) => setCategorie(val)}>
                       <SelectTrigger className="w-full">
@@ -133,9 +149,9 @@ const HistoriqueVentePage = () => {
                   <tr>
                     <th className="text-start py-2 px-6">Client</th>
                     <th className="text-start px-6">Produit</th>
-                    <th className="text-start px-6">Prix</th>
+                    <th className="text-start hidden md:table-cell px-6">Prix</th>
                     <th className="text-start px-6">Quantité</th>
-                    <th className="text-start px-6">Date de vente</th>
+                    <th className="text-start hidden md:table-cell px-6">Date de vente</th>
                     <th className="text-start px-6">Total</th>
                   </tr>
                 </thead>
@@ -149,11 +165,11 @@ const HistoriqueVentePage = () => {
                      
 
                       <td className="text-start px-6">{vt.produit_nom}</td>
-                      <td className="text-start px-6">{vt.prix_produit}</td>
+                      <td className="text-start hidden md:table-cell px-6">{vt.prix_produit}</td>
 
 
                       <td className="text-start pl-12">{vt.quantite}</td>
-                      <td className="text-start px-6">{vt.date_vente}</td>
+                      <td className="text-start hidden md:table-cell px-6">{vt.date_vente}</td>
                       <td className="text-start px-6">{vt.total}</td>
                     </tr>
                   ))}

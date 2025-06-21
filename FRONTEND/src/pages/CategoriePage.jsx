@@ -3,6 +3,7 @@ import { voir_categorie } from '@/api/apiCategorie'
 import Categorie from '@/components/Categorie'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
+import SideBarMobile from '@/components/SideBarMobile'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
@@ -17,17 +18,19 @@ const CategoriePage = () => {
   return (
     <main className="flex w-full">
       <Sidebar />
+      
       <div className="flex-1 h-screen bg-[#F5F5F5] relative overflow-auto">
         <Navbar />
-        <div className="w-full flex items-center justify-between mt-8 px-6 mb-2 py-2">
+        <SideBarMobile/>
+        <div className="w-full flex items-center justify-between mt-15 md:mt-8  px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Catégories</h3>
         </div>
 
-        <div className="w-full px-6">
+        <div className="w-full  flex items-center px-6">
           {isLoading && <p>Chargement...</p>}
          
 
-          <table className="w-[500px] bg-white shadow-md rounded">
+          <table className=" max-w-96 bg-white shadow-md rounded">
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-center">N:</th>

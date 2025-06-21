@@ -13,7 +13,7 @@ const CategorieChart = ({categorieVentes}) => {
 
   return (
     <motion.div
-      className="bg-blue-900 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
+      className="bg-blue-900 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border h-[370px] border-gray-700"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
@@ -21,7 +21,7 @@ const CategorieChart = ({categorieVentes}) => {
       <h2 className="text-lg font-medium mb-4 text-gray-100">Vente par categorie</h2>
 
       <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="90%">
           <PieChart>
             <Pie
               data={categorieVentes}

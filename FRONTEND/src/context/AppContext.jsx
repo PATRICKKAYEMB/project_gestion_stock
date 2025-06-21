@@ -13,6 +13,7 @@ export const ContextProvider =({children})=>{
 
 const [user,setUser]=useState(null)
 const [panier, setPanier] = useState([])
+const [toggleMobile,SetToggleMobile]=useState(false)
 
 
    const HandleSucces = async (data)=>{
@@ -49,11 +50,11 @@ const [panier, setPanier] = useState([])
     )
     setPanier(nouveauPanier)
   } else {
-    setPanier([...panier, { ...produit, quantite: 1 }]) // ← ici
+    setPanier([...panier, { ...produit, quantite: 1 }])
   }
   }
     return (
-        <AppContext.Provider value={{HandleSucces,panier,logOut,HandleUser,user,ajouterAuPanier,setPanier,}}>
+        <AppContext.Provider value={{HandleSucces,panier,logOut,HandleUser,user,ajouterAuPanier,setPanier,toggleMobile,SetToggleMobile}}>
             {children}
         </AppContext.Provider>
     )

@@ -11,7 +11,7 @@ const DashbordPage = () => {
         <Sidebar/>
 
         <main className='flex-1 px-5 '>
-            <div className='gap-8 grid grid-cols-4 px-10 pt-15 w-full'>
+            <div className='gap-8 grid lg:grid-cols-4  md:grid-cols-3 px-10 pt-15 w-full'>
                 <CountNotification/>
                 <CountPerte/>
                 <CountVente/>

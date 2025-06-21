@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { voir_achat } from '@/api/apiAprovisionner'
+import SideBarMobile from '@/components/SideBarMobile'
 
  
 
@@ -54,8 +55,9 @@ const HistoriqueAchatPage = () => {
     <Sidebar />
     <main className="flex-1 h-screen bg-[#F5F5F5] relative">
       <Navbar />
+      <SideBarMobile/>
 
-      <div className="w-full flex items-center justify-between mt-8 px-6 mb-2 py-2">
+      <div className="w-full flex items-center justify-between mt-15 md:mt-8 px-6 mb-2 py-2">
         <h3 className="text-3xl font-bold text-blue-900">Mes Achats</h3>
 
         <div className="flex items-center cursor-pointer justify-center bg-white px-4 py-2 shadow rounded-md gap-3">
@@ -68,21 +70,35 @@ const HistoriqueAchatPage = () => {
         <div className="w-full h-[100%] bg-white px-4 shadow-2xl rounded-tl-2xl rounded-tr-2xl pt-5">
           <div className="flex items-center justify-between mt-5 relative">
             <div>
-              <div className="flex items-center gap-4">
-                Du:{' '}
-                <input
-                  type="date"
-                  onChange={(e) => setDate_debut(e.target.value)}
-                  placeholder="date"
-                  className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
-                />
-                Au:{' '}
-                <input
-                  type="date"
-                  onChange={(e) => setDate_fin(e.target.value)}
-                  placeholder="date"
-                  className="border-1 border-gray-400 bg-[#F1F1F1] px-2 py-1"
-                />
+              <div className="md:flex items-center gap-4">
+
+                <div className='mb-3 md:mb-0'>
+
+                    <span>
+                      Du:
+                    </span>
+                
+                    <input
+                      type="date"
+                      onChange={(e) => setDate_debut(e.target.value)}
+                      placeholder="date"
+                      className="border-1 ml-2 md:ml-0 border-gray-400 bg-[#F1F1F1] px-2 py-1"
+                    />
+                </div>
+
+
+                <div>
+
+                  <span>Au:</span>
+                    <input
+                      type="date"
+                      onChange={(e) => setDate_fin(e.target.value)}
+                      placeholder="date"
+                      className="border-1 ml-2 md:ml-0 border-gray-400 bg-[#F1F1F1] px-2 py-1"
+                    />
+
+                </div>
+                
               </div>
             </div>
 
@@ -95,7 +111,7 @@ const HistoriqueAchatPage = () => {
             </div>
 
             {filter && (
-              <div className="absolute right-0 w-[160px] top-8 z-10 bg-blue-900 px-2 py-5 rounded-md">
+              <div className="absolute right-0 w-[160px] top-15 md:top-8 z-10 bg-blue-900 px-2 py-5 rounded-md">
                 <div className="mb-4">
                   <Select onValueChange={(val) => setCategorie(val)}>
                     <SelectTrigger className="w-full">
@@ -133,16 +149,15 @@ const HistoriqueAchatPage = () => {
               </div>
             )}
           </div>
-
           <div className="py-2 pt-10 h-[60vh] overflow-hidden overflow-y-scroll">
             <table className="w-full border-1 px-4">
               <thead>
                 <tr>
                 
                   <th className="text-start px-6">Produit</th>
-                  <th className="text-start px-6">Prix</th>
+                  <th className="text-start hidden md:table-cell px-6">Prix</th>
                   <th className="text-start px-6">Quantité</th>
-                  <th className="text-start px-6">Date de vente</th>
+                  <th className="text-start  px-6">Date</th>
                   <th className="text-start px-6">Total</th>
                 </tr>
               </thead>
@@ -156,11 +171,11 @@ const HistoriqueAchatPage = () => {
                    
 
                     <td className="text-start px-6">{vt.produit_nom}</td>
-                    <td className="text-start px-6">{vt.prix_produit}</td>
+                    <td className="text-start hidden md:table-cell px-6">{vt.prix_produit}</td>
 
 
                     <td className="text-start pl-12">{vt.quantite}</td>
-                    <td className="text-start px-6">{vt.date_achat}</td>
+                    <td className="text-start  px-6">{vt.date_achat}</td>
                     <td className="text-start px-6">{vt.total}</td>
                   </tr>
                 ))}

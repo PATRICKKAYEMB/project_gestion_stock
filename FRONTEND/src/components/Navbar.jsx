@@ -2,17 +2,18 @@ import { CountNotifications } from '@/api/apiNotification'
 import { AppContext } from '@/context/AppContext'
 import { useQuery } from '@tanstack/react-query'
 import { BellIcon } from 'lucide-react'
-import React, { useContext } from 'react'
+import React, { useContext} from 'react'
 import { BiBasket, BiUser } from 'react-icons/bi'
 import { FaCartArrowDown } from 'react-icons/fa'
 import { MdOutlineShoppingCart } from 'react-icons/md'
+import { BiMenu, BiTransfer } from 'react-icons/bi';
 import { TbBasket } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 
 
 const Navbar = ({name}) => {
 
-  const {panier}= useContext(AppContext)
+  const {panier,toggleMobile,SetToggleMobile}= useContext(AppContext)
 
   const {data} = useQuery({
       queryKey:["notifications"],
@@ -23,8 +24,10 @@ const Navbar = ({name}) => {
 const navigation = useNavigate()
   const notifications= data??0
   return (
-    <div className='flex-1 flex justify-between bg-blue-900 px-5 py-1 h-[60px] ml-1 items-center ' >
+    <div className='md:flex-1 w-full fixed md:relative flex z-20 justify-between bg-blue-900 px-5 py-1 h-[60px]  items-center ' >
+      <BiMenu size={60} color='white ' className='top-[10px] lg:hidden md:hidden block right-[20px] cursor-pointer' onClick={()=>SetToggleMobile(!toggleMobile)} />
         <h3 className='text-white text-2xl font-bold'>{name}</h3> 
+        
         
         <div className='flex items-center justify-center gap-3'>
 

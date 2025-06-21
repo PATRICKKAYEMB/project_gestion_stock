@@ -11,6 +11,8 @@ import Sidebar from '../components/Sidebar'
 import { useQuery } from '@tanstack/react-query';
 import { categorieVente, ventesMensuelles } from '@/api/apiCategorie';
 import { motion } from 'framer-motion';
+import SideBarMobile from '@/components/SideBarMobile'
+import Navbar from '@/components/Navbar'
 
 
 const StatistiquePage = () => {
@@ -35,7 +37,14 @@ const StatistiquePage = () => {
     <div className='w-full flex '>
 
    <Sidebar/>
-    <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8 flex-1'>
+   
+
+    <main className=' flex-1'>
+      <Navbar/>
+      <SideBarMobile/>
+      <div className='max-w-7xl mx-auto mt-12 md:mt-0 py-6 px-4 lg:px-8 '>
+
+     
        <div className="flex items-center justify-end mt-1 mb-3 relative">
                   
       
@@ -86,26 +95,26 @@ const StatistiquePage = () => {
 
 
 
-            <motion.div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8'
+            <motion.div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-4'
                 initial={{opacity:0,y:20}}
                 animate={{opacity:1,y:0}}
                 transition={{duration:1}}
             >
 
-               <StartCard name="Total sales" icon={Zap} value="$12,345" color="#6366f1" />
-               <StartCard name="New users" icon={Users} value="$1,245" color="#885CF1" />
-               <StartCard name="Total produits" icon={ShoppingBag} value="$345" color="#EC4899" />
-               <StartCard name="Conversion rate" icon={BarChart2} value="$12,5%" color="#108981" />
+               <StartCard name="Total vente" icon={Zap} value="12 345 fc" color="#6366f1" />
+               <StartCard name="categories" icon={Users} value="45" color="#885CF1" />
+               <StartCard name="produits" icon={ShoppingBag} value="45" color="#EC4899" />
+              
             </motion.div>
            {/** -------charts------------- */}
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-8'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-9 h-[50vh]  '>
               <CategorieChart categorieVentes={categorieVentes}/>
               <SalersCharts salesdata={salesdata}/>
                
           </div>
 
-
+      </div>
           </main>
     </div>
   )

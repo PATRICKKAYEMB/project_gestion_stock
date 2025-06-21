@@ -23,6 +23,7 @@ import { DotIcon, LayoutDashboard, LayoutDashboardIcon, LayoutGrid ,List} from '
 import { AppContext } from '@/context/AppContext'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { MdAdd, MdOutlineShoppingCart } from 'react-icons/md'
+import SideBarMobile from '@/components/SideBarMobile'
 
 
 
@@ -66,20 +67,21 @@ const ProduitsPage = () => {
     <Sidebar/>
           <div className='flex-1 bg-[#F1F1F1]'>
                 <Navbar/>
-                    <div className='px-8 pt-6'>
+                <SideBarMobile/>
+                    <div className='px-2 md:px-8 mt-12 md:mt-0 pt-6'>
 
                    
 
-                    <div  className='float-right bg-blue-900 px-4 py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
-                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white flex items-center justify-center  text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
+                    <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
+                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white flex items-center justify-center text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
                         
                     </div>
-                        <div className='px-3 py-1 bg-white mt-16'>
+                        <div className='md:px-3 px-2 py-1 bg-white mt-16'>
                         
                             
                 
                             <div className='flex items-center justify-between mt-5 '>
-                                <div className='border-2 flex justify-center items-center px-2 py-1 border-amber-900'> 
+                                <div className='border-2 flex justify-center items-center px-2 py-1  mr-9 md:mr-0 border-amber-900'> 
                                     
                                     <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}  className='outline-0 border-0 ml-1 'placeholder='search...'/>
                                     <BiSearch/>
@@ -169,16 +171,16 @@ const ProduitsPage = () => {
                 <table className="w-full  mt-4 bg-white ">
                 <thead>
                     <tr className=" bg-blue-900 border-1 w-full border-gray-400">
-                    <th className="  text-white  text-center">N°</th>
+                    <th className="  text-white hidden md:table-cell text-center">N°</th>
                     <th className="  text-white  text-center">produit</th>
-                    <th className="  text-white text-center">Categorie</th>
-                    <th className="   text-white text-center">prix</th>
+                    <th className="  text-white hidden md:table-cell text-center">Categorie</th>
+                    <th className="   text-white hidden md:table-cell text-center">prix</th>
                     <th className="   text-white  text-center">quantite</th>
                     
                     <th className=" text-white text-center">Status</th>
-                    <th className="   text-white  text-center">Description</th>
+                    <th className="   text-white hidden md:table-cell  text-center">Description</th>
                    
-                    <th className="   text-white text-center">Date Ajout</th>
+                    <th className="   text-white hidden md:table-cell text-center">Date Ajout</th>
                    
                     <th className="   text-white text-center">Action</th>
 
@@ -189,16 +191,16 @@ const ProduitsPage = () => {
                         {
                         voir_produit.map( (prod,id) => (
                         <tr className='  transition-all ease-in-out round-md border-1 border-gray-400 ' key={id}  >
-                             <td className=" py-1  mb-3  text-center">{prod.id}</td>
+                             <td className=" py-1  mb-3 hidden md:table-cell text-center">{prod.id}</td>
                                 <td className=" py-3 mb-3 text-center flex gap-3 items-center justify-center">
                                 <img src={`${BASEUrl}${prod.image}`} alt="" className='w-10 h-10 rounded-full' />
                                     <span> {prod.name}</span>
                                    
                                     
                                     </td>
-                                <td className=" py-1  mb-3  text-center">{prod.categorie}</td>
+                                <td className=" py-1  mb-3 hidden md:table-cell text-center">{prod.categorie}</td>
                                
-                                <td className="py-1  mb-3  text-center">{prod.prix}</td>
+                                <td className="py-1  mb-3 hidden md:table-cell text-center">{prod.prix}</td>
                                 <td className="py-1  mb-3  text-center text-black">{prod.quantite}</td>
                                 
 
@@ -207,9 +209,9 @@ const ProduitsPage = () => {
 
                                 </td>
 
-                                <td className=" py-1  mb-3  text-center">{prod.description}</td>
+                                <td className=" py-1  mb-3 hidden md:table-cell text-center">{prod.description}</td>
                                
-                                <td className="py-1  mb-3   text-center">{prod.date_ajout}</td>
+                                <td className="py-1  mb-3 hidden md:table-cell  text-center">{prod.date_ajout}</td>
                                  <td className="py-1  mb-3   items-center justify-end pr-4 flex gap-2">
 
                                    

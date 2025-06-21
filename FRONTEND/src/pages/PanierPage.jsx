@@ -39,7 +39,7 @@ const PanierPage = () => {
 
   const total = panier.reduce((acc, produit) => acc + produit.prix * produit.quantite, 0)
 
-  // 🚀 Mutation pour vendre
+
   const { mutate, isLoading } = useMutation({
     mutationFn: venteProduit,
     onSuccess: (data) => {
@@ -53,7 +53,7 @@ const PanierPage = () => {
     }
   })
 
-  // 🔥 Fonction de vente
+ 
   const handleVente = () => {
     if (!client) {
       toast.error("Veuillez entrer le nom du client")

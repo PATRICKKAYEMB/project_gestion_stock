@@ -21,6 +21,7 @@ import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { LayoutGrid, List } from 'lucide-react'
+import SideBarMobile from '@/components/SideBarMobile'
 
 
 
@@ -64,12 +65,10 @@ const ProduitGridPage = () => {
     <Sidebar/>
           <div className='flex-1 bg-[#F1F1F1]'>
                 <Navbar/>
+                <SideBarMobile/>
                     <div className='px-8 pt-6'>
-
-                   
-
-                    <div  className='float-right bg-blue-900 px-4 py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
-                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white text-lg'>ajouter Produit</h3>
+                    <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
+                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white text-lg'>ajouter</h3>
                         
                     </div>
                         <div className='px-3 py-1 bg-white mt-16'>
@@ -161,7 +160,7 @@ const ProduitGridPage = () => {
                 
                             <div >
                                         
-                                        <div className="overflow-x-hidden overflow-x-scroll h-[60vh] grid grid-cols-4  mt-5 gap-3 w-full ">
+                                        <div className="overflow-x-hidden overflow-x-scroll h-[60vh] grid md:grid-cols-3 lg:grid-cols-4  mt-5 gap-3 w-full ">
                                          { voir_produit.map((prod,id) => (
                                              <GridView  name={prod.name}
                                                         prix={prod.prix}
