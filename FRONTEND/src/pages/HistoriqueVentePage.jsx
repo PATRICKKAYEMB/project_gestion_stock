@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import { Download } from 'lucide-react';
 import { BiFilterAlt } from 'react-icons/bi';
 import { useQuery } from '@tanstack/react-query';
-import { voir_vente } from '@/api/apiVente';
+import { download_story_ventes, voir_vente } from '@/api/apiVente';
 import { voir_categorie } from '@/api/apiCategorie';
 import {
   Select,
@@ -21,6 +21,28 @@ const HistoriqueVentePage = () => {
   const [sort, setSort] = useState('recent');
   const [filter, setFilter] = useState(false);
   const [categorie, setCategorie] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
+
+const handleDownload = async () => {
+  try {
+    setIsDownloading(true);
+
+    const blob = await download_story_ventes({ categorie, date_debut, date_fin, sort });
+    
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "ventes.csv");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setIsDownloading(false);
+  }
+};
 
   // Récupération des ventes avec les filtres
   const { data: ventesData } = useQuery({
@@ -53,10 +75,13 @@ const HistoriqueVentePage = () => {
         <div className="w-full flex items-center justify-between md:mt-8 mt-15 px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Mes Ventes</h3>
 
-          <div className="flex items-center cursor-pointer justify-center bg-white md:px-4 md:py-2 px-3 py-1 shadow rounded-md gap-3">
-            <Download />
-            <span>Exporter</span>
-          </div>
+           
+           <div onClick={handleDownload} className="flex items-center cursor-pointer justify-center bg-white md:px-4 md:py-2 px-3 py-1 shadow rounded-md gap-3">
+                     <Download />
+              <span>{isDownloading ? "Téléchargement..." : "Exporter"}</span>
+            </div>
+
+         
         </div>
 
         <div className="px-6 w-full">

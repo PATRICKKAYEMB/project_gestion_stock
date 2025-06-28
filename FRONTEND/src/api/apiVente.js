@@ -34,3 +34,29 @@ export async function venteProduit(payload) {
   }
 }
 
+export async function download_story_ventes({date_debut,date_fin,categorie}){
+   
+  try {
+     const params={}
+     if (categorie && categorie !== "all"){
+          params.categorie = categorie;
+     }
+     if (date_debut && date_fin){
+      params.date_debut=date_debut;
+      params.date_fin= date_fin
+     }
+     const response = await api.get("download_story_ventes/",
+      {params,
+        responseType: 'blob'
+
+     })
+     return response.data
+
+    
+  } catch (error) {
+        console.error("Erreur téléchargement CSV :", error);
+        throw error
+    
+  }
+}
+

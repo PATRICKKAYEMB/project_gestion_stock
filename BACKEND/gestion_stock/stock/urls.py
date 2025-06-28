@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_user,produit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (get_user,produit,download_story_vente,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,historiqueVente,venteProduit,achatProduit,perteProduit,notification,countNotification)
 
 
@@ -40,5 +40,6 @@ urlpatterns = [
     path("countNotification/", countNotification, name="countNotification"),
     path("categorieVente/",categorieVente,name="categorieVente"),
     path("ventesMensuelles/", ventes_par_jour, name="ventes-par-mois"),
+    path("download_story_ventes/", download_story_vente, name="download-story-ventes"),
   
 ]

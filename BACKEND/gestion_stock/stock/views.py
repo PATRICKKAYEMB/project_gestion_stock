@@ -3,6 +3,8 @@ from django.db.models.functions import TruncDay
 from django import views
 from django.db import transaction
 from django.db.models import Sum, F
+from django.http import HttpResponse
+import csv
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serialisers import( UserSerializer,
                          ClientSerializer,
@@ -512,5 +514,36 @@ def ventes_par_jour(request):
     ]
 
     return Response(data)
+
+
+# TELECHARGEMENT DES DONNNES EN CSV
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_story_vente(request):
+    date_debut= request.query_params.get("date_debut")
+    date_fin= request.query_params.get("date_fin")
+    categorie=request.query_params.get("categorie")
+
+    ventes=VenteProduit.objects.all()
+
+    if date_debut and date_fin:
+        ventes= ventes.filter(date_vente__range=[date_debut,date_fin])
+    if categorie:
+        ventes= ventes.filter(produit__categorie__id=categorie)
+    response=HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ventes.csv"'
+    writer= csv.writer(response)
+    writer.writerow(['produit_id','produit_nom','prix','categorie','quantite','date_vente'])
+    for vente in ventes:
+        writer.writerow([
+            vente.produit.id,
+            vente.produit.name,
+            vente.produit.prix,
+            vente.produit.categorie.name    ,
+            vente.quantite,
+            vente.date_vente.strftime('%Y-%m-%d'),
+        ])
+    return response
 
 

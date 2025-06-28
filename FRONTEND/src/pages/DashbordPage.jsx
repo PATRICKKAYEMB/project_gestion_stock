@@ -4,6 +4,8 @@ import CountPerte from '../components/CountPerte'
 import CountVente from '../components/CountVente'
 import CountProduits from '../components/CountProduits'
 import Sidebar from '../components/Sidebar'
+import SideBarMobile from '@/components/SideBarMobile'
+import Navbar from '@/components/Navbar'
 
 const DashbordPage = () => {
   return (
@@ -11,6 +13,8 @@ const DashbordPage = () => {
         <Sidebar/>
 
         <main className='flex-1 px-5 '>
+          <Navbar/>
+          <SideBarMobile/>
             <div className='gap-8 grid lg:grid-cols-4  md:grid-cols-3 px-10 pt-15 w-full'>
                 <CountNotification/>
                 <CountPerte/>
