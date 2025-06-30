@@ -184,6 +184,7 @@ const handleDownload = async () => {
               <table className="w-full border-1 px-4">
                 <thead>
                   <tr>
+                     <th className="text-start py-2 px-6">N</th>
                     <th className="text-start py-2 px-6">Client</th>
                     <th className="text-start px-6">Produit</th>
                     <th className="text-start hidden md:table-cell px-6">Prix</th>
@@ -198,6 +199,7 @@ const handleDownload = async () => {
                       className="px-2 py-4 border-1 border-gray-400"
                       key={id}
                     >
+                      <td className="text-start py-3 px-6">{vt.id}</td>
                       <td className="text-start py-3 px-6">{vt.client}</td>
                      
 

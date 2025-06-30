@@ -28,12 +28,12 @@ const CategoriePage = () => {
         <div className="w-full flex items-center justify-between mt-15 md:mt-8  px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Catégories</h3>
         </div>
-                       <span className='cursor-pointer' onClick={()=> navigation("/ajouterCategorie")}>ajouter</span>
+                       <span className='cursor-pointer text-center  text-white hover:bg-black hover:duration-75 px-4 py-2 bg-blue-900 ml-[260px]  mb-9' onClick={()=> navigation("/ajouterCategorie")}>ajouter</span>
         <div className="w-full  flex items-center px-6">
           {isLoading && <p>Chargement...</p>}
          
                                             
-          <table className=" max-w-96 bg-white shadow-md rounded">
+          <table className=" max-w-96 mt-4  bg-white shadow-md rounded">
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-center">N:</th>

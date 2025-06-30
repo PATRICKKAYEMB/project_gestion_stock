@@ -35,7 +35,7 @@ function onSubmit(id) {
 
         <Trash2 className="w-5 h-5 text-red-600 hover:text-red-800 cursor-pointer border-2  " onClick={()=>onSubmit(categorieId)} />
         <Pencil className="w-5 h-5 text-blue-600 hover:text-blue-800 cursor-pointer" onClick={()=>navigate(`/modifierCategorie/${categorieId}/`)}/>
-        <Plus className="w-5 h-5 cursor-pointer" onClick={()=>navigate('/ajouterCategorie')} />
+      
       </td>
     </tr>
   )
