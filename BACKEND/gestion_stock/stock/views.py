@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.db.models.functions import TruncDay
 from django import views
+import uuid
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import HttpResponse
@@ -348,6 +349,8 @@ def venteProduit(request):
 
     client_obj, _ = Client.objects.get_or_create(name=client_name)
 
+    transaction_id = str(uuid.uuid4())
+
     try:
         with transaction.atomic():
             for item in produits:
@@ -369,7 +372,8 @@ def venteProduit(request):
                     quantite=quantite,
                     total=total,
                     client=client_obj,
-                    date_vente=date_vente
+                    date_vente=date_vente,
+                    transaction_id=transaction_id  
                 )
 
                 produit.quantite -= quantite
@@ -534,10 +538,10 @@ def download_story_vente(request):
     response=HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ventes.csv"'
     writer= csv.writer(response)
-    writer.writerow(['produit_id','produit_nom','prix','categorie','quantite','date_vente'])
+    writer.writerow(['trasaction_Id','produit_nom','prix','categorie','quantite','date_vente'])
     for vente in ventes:
         writer.writerow([
-            vente.produit.id,
+            vente.transaction_id,
             vente.produit.name,
             vente.produit.prix,
             vente.produit.categorie.name    ,

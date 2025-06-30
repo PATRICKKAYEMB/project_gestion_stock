@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.utils.timezone import now
+from django.utils import timezone
+
 
 
 
@@ -63,14 +65,14 @@ class Produit (models.Model):
         if self.quantite <= 10:
             Notification.objects.create(
                 produit=self,
-                type_alerte="Quantité faible",
-                description=f"Le produit '{self.name}' a une quantité faible ({self.quantite}).",
+                type_alerte="Quantité faible", 
+                description=f"Le produit {self.name} a une quantité faible ({self.quantite}).",
                 date_alerte=now().date()
             )
 
             send_mail(
                 subject="Alerte: Quantité faible",
-                message=f"Attention, le produit '{self.name}' est presque épuisé (quantité: {self.quantite}).",
+                message=f"Attention, le produit {self.name} est presque épuisé (quantité: {self.quantite}).",
                 from_email="ton_email@exemple.com",
                 recipient_list=["admin@exemple.com"],
                 fail_silently=True
@@ -90,7 +92,8 @@ class VenteProduit(models.Model):
     produit=models.ForeignKey(Produit,related_name="ventes", on_delete=models.CASCADE)
     client=models.ForeignKey(Client, related_name="ventes" , on_delete=models.CASCADE)
     quantite=models.PositiveIntegerField()
-    date_vente=models.DateField()
+    date_vente = models.DateTimeField(default=timezone.now) 
+    transaction_id = models.CharField(max_length=100, db_index=True)
     total=models.IntegerField(null=True,blank=True)
 
     def save(self,*args, **kwargs):

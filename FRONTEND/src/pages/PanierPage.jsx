@@ -12,6 +12,7 @@ import { venteProduit } from '@/api/apiVente'
 const PanierPage = () => {
   const { panier, setPanier } = useContext(AppContext)
   const [client, setClient] = useState("")
+  const [dateVente, setDateVente] = useState('')
 
   const supprimerProduit = (id) => {
     const nouveauPanier = panier.filter(p => p.id !== id)
@@ -67,7 +68,7 @@ const PanierPage = () => {
 
     const payload = {
       client,
-      date_vente: new Date().toISOString().split("T")[0],
+      date_vente: dateVente,
       produits: produitsPayload
     }
 
@@ -161,6 +162,22 @@ const PanierPage = () => {
                   />
 
              </div>
+              <br />
+
+              <div>
+                     <div className='mb-2'>
+                        <h3> entrer la date:</h3>
+                       
+                    </div>
+
+                    <input
+                type='datetime-local'
+                placeholder='Date de vente'
+                value={dateVente}
+                onChange={(e) => setDateVente(e.target.value)}
+                className='p-2 border rounded w-full mb-4'/>
+
+              </div>
              
               <br />
                <h3 className='text-2xl float-right font-bold mb-4'>Total : {total} FC</h3>
