@@ -24,7 +24,7 @@ const Navbar = ({name}) => {
 const navigation = useNavigate()
   const notifications= data??0
   return (
-    <div className='md:flex-1 w-full fixed md:relative flex z-20 justify-between bg-blue-900 px-5 py-1 h-[60px]  items-center ' >
+    <div className='md:flex-1 w-full md:ml-2 fixed md:relative flex z-20 justify-between bg-blue-900 px-5 py-1 h-[60px]  items-center ' >
       <BiMenu size={60} color='white ' className='top-[10px] lg:hidden md:hidden block right-[20px] cursor-pointer' onClick={()=>SetToggleMobile(!toggleMobile)} />
         <h3 className='text-white text-2xl font-bold'>{name}</h3> 
         

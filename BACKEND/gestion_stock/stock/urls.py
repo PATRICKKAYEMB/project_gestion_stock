@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_user,produit,download_story_vente,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (get_user,produit,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,historiqueVente,venteProduit,achatProduit,perteProduit,notification,countNotification)
 
 
@@ -22,10 +22,11 @@ urlpatterns = [
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path("countProduit/",countVente, name="countProduit"),
+    path("countProduit/",countProduit, name="countProduit"),
     path("countVente/",countVente, name="countVente"),
     path("countPerte/", countPerte, name="countPerte"),
     path("countAchat/",countAchat, name="countAchat"),
+
 
         #GESTION HISTORIQUE
     path("historiqueVente/",historiqueVente, name="historiqueVente"),

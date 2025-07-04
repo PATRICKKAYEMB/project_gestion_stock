@@ -28,7 +28,7 @@ const Sidebar = ({toggle,setToggle}) => {
   
  const navigation = useNavigate();
   return (
-    <div className={`fixed relative hidden md:block lg:block bg-blue-900 h-screen shadow transition-all duration-300 ease-in-out ${toggles?"w-20":"w-64"}  overflow-hidden`}>
+    <div className={`fixed  relative hidden md:block lg:block bg-blue-900 h-screen shadow transition-all duration-300 ease-in-out ${toggles?"w-20":"w-64"}  overflow-hidden`}>
      
      <BiMenu size={60} color='white ' className='absolute top-[10px] right-[20px] cursor-pointer' onClick={()=>setToggles(!toggles)}/>
      

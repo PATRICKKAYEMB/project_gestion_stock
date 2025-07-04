@@ -19,14 +19,9 @@ const [toggleMobile,SetToggleMobile]=useState(false)
    const HandleSucces = async (data)=>{
 
             const {access,refresh}= data
-
             localStorage.setItem("access",access),
             localStorage.setItem("refresh",refresh)
-            navigate("/dashbord")
-        
-
-           
-
+            navigate("/dashbord")   
    }
 
    const logOut = ()=>{
@@ -59,4 +54,3 @@ const [toggleMobile,SetToggleMobile]=useState(false)
         </AppContext.Provider>
     )
 }
-

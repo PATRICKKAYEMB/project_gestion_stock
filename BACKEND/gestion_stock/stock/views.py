@@ -538,12 +538,14 @@ def download_story_vente(request):
     response=HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ventes.csv"'
     writer= csv.writer(response)
-    writer.writerow(['trasaction_Id','produit_nom','prix','categorie','quantite','date_vente'])
+    writer.writerow(['trasaction_Id','produit_id','produit_nom','prix','categorie_id','categorie nom','quantite','date_vente'])
     for vente in ventes:
         writer.writerow([
             vente.transaction_id,
+            vente.produit.id,
             vente.produit.name,
             vente.produit.prix,
+            vente.produit.categorie.id,
             vente.produit.categorie.name    ,
             vente.quantite,
             vente.date_vente.strftime('%Y-%m-%d'),

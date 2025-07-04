@@ -31,6 +31,7 @@ class  MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["user"]= {
             "id":self.user.id,
             "username":self.user.username,
+            "role":self.user.role
            
         }
 
