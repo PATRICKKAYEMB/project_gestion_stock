@@ -112,3 +112,11 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = "__all__"
+
+class RecommendedProductSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=255)
+    image_url = serializers.URLField(allow_blank=True, required=False)
+    # Si vous ajoutez d'autres champs dans la recommendation_module.py, ajoutez-les ici aussi:
+    # description = serializers.CharField(allow_blank=True, required=False)
+    # prix = serializers.FloatField(required=False)

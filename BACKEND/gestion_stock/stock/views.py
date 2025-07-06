@@ -5,6 +5,8 @@ import uuid
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import HttpResponse
+from  .recommandation.recommandation_module import get_recommendations
+
 import csv
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serialisers import( UserSerializer,
@@ -14,6 +16,7 @@ from .serialisers import( UserSerializer,
                          CategorieSerializer,
                          PerteProduitSerializer,
                          ProduitSerializer,
+                         RecommendedProductSerializer,
                          NotificationSerializer,
                          ApprovisionnerProduitSerializer,)
 
@@ -551,5 +554,28 @@ def download_story_vente(request):
             vente.date_vente.strftime('%Y-%m-%d'),
         ])
     return response
+
+
+@api_view(['GET']) # Indique que cette vue n'accepte que les requêtes GET
+def get_product_recommendations_api(request, product_id):
+    try:
+        # --- CHOISISSEZ LA BONNE LIGNE ICI SELON LE TYPE DE L'INDEX DE VOTRE PIVOT_TABLE ---
+        # Si votre pivot_table.index.dtype est 'int64' (entier) :
+        product_id_for_model = int(product_id) 
+        # Si votre pivot_table.index.dtype est 'object' (chaîne de caractères) :
+        # product_id_for_model = str(product_id) 
+        
+    except ValueError:
+        return Response({'error': 'ID de produit invalide.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    recommendations_data = get_recommendations(
+        target_product_id=product_id_for_model, 
+        top_k=5 
+    )
+
+    serializer = RecommendedProductSerializer(recommendations_data, many=True)
+    
+    return Response({'recommendations': serializer.data}, status=status.HTTP_200_OK)
+
 
 
