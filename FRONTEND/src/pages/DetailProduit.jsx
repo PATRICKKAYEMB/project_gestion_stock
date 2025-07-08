@@ -8,11 +8,13 @@ import { toast } from 'react-toastify'
 import { FaTrash } from 'react-icons/fa'
 import { BASEUrl } from '@/api/api'
 import { AppContext } from '@/context/AppContext'
+import useAuth from '@/hooks/useAuth'
 
 
 const DetailProduit = () => {
 
   const{ajouterAuPanier}=useContext(AppContext)
+  const {user} =useAuth()
     const {id} = useParams()
    
     const navigate=useNavigate()
@@ -28,9 +30,18 @@ const DetailProduit = () => {
           navigate("/produits");
           toast.success("Le produit a été supprimé");
         },
-      });
-      
 
+      }
+    );
+
+     function verificationModification(detail_produit) {
+            if (!user || user.role !== "admin") {
+              alert("Seul l'admin a le droit de modifier un produit");
+            }
+            else {
+              navigate(`/modifierProduit/${detail_produit.id}/`);
+            }
+      }
       const statusColors = {
         red: "bg-red-500",
         green: "bg-green-500",
@@ -41,9 +52,27 @@ const DetailProduit = () => {
     };
  
       function onSubmit(id) {
-        if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
+
+        if (!user || user.role !== "admin") {
+          alert("Seul l'admin a le droit de supprimer un produit");
+        }
+
+        else{
+           if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
           mutate.mutate({ id });
         }
+
+        }
+       
+      }
+
+      function verificationReaprovissionnement(detail_produit) {
+        if (!user || user.role !== "admin") {
+          alert("Seul l'admin a le droit d'approvisionner un produit");
+        } else {
+          navigate(`/approvisionner/${detail_produit.id}/`);
+        }
+        
       }
       
    
@@ -71,18 +100,10 @@ const DetailProduit = () => {
 
                            </div>
                            <div className='flex gap-2'>
-                                <button
-  className='px-2 py-2 bg-blue-500 shadow-md rounded-md'
-  onClick={() => {
-    ajouterAuPanier(detail_produit)
-    toast.success("Produit ajouté au panier !")
-  }}
->
-  ajouter au panier
-</button>
+  
 
-                                <button className='px-2 py-2 bg-green-500 shadow-md rounded-md' onClick={()=>(navigate(`/approvisionner/${detail_produit.id}/`))}>approvisionner</button>
-                                <button  className='px-2 py-2 bg-yellow-500 shadow-md rounded-md' onClick={()=>(navigate(`/modifierProduit/${detail_produit.id}/`))}>modification</button>
+                                <button className='px-2 py-2 bg-green-500 shadow-md rounded-md' onClick={()=>verificationReaprovissionnement(detail_produit.id)}>approvisionner</button>
+                                <button  className='px-2 py-2 bg-yellow-500 shadow-md rounded-md' onClick={()=>verificationModification(detail_produit.id)}>modification</button>
                             
                            </div>
                            

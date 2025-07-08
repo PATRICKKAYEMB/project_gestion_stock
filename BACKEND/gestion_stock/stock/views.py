@@ -66,6 +66,11 @@ def categorie(request,id_cat=None):
     
     elif request.method == "POST":
 
+        user= request.user.role
+
+        if user != "admin":
+            return Response({"message":"vous n'avez pas les droits pour créer une catégorie"}, status=status.HTTP_403_FORBIDDEN)
+
         serializer =CategorieSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -78,12 +83,19 @@ def categorie(request,id_cat=None):
     
 
     elif request.method == "DELETE":
+
+        user= request.user.role
+        if user != "admin":
+            return Response({"message":"vous n'avez pas les droits pour supprimer une catégorie"}, status=status.HTTP_403_FORBIDDEN)
         
         categorie= get_object_or_404(Categorie,id=id_cat)
         categorie.delete()
         return Response({"message": "produit supprimé"}, status=status.HTTP_204_NO_CONTENT)
     
     elif request.method == "PUT":
+        user= request.user.role
+        if user != "admin":
+            return Response({"message":"vous n'avez pas les droits pour modifier une catégorie"}, status=status.HTTP_403_FORBIDDEN)
 
         categorie=get_object_or_404(Categorie,id=id_cat)
 
@@ -111,7 +123,6 @@ def categorie(request,id_cat=None):
 def produit(request,id_prod=None):
 
     if request.method == "GET":
-
         if id_prod is not None:
             produit = get_object_or_404(Produit,id=id_prod)
             serializer = ProduitSerializer(produit)

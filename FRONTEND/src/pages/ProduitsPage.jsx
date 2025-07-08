@@ -24,6 +24,7 @@ import { AppContext } from '@/context/AppContext'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { MdAdd, MdOutlineShoppingCart } from 'react-icons/md'
 import SideBarMobile from '@/components/SideBarMobile'
+import useAuth from '@/hooks/useAuth'
 
 
 
@@ -31,13 +32,26 @@ const ProduitsPage = () => {
     const [filter,setFilter] = useState(false)
     const [categorie,setCategorie]= useState("")
     const [sort,setSort] = useState("")
+     const [search,setSearch]= useState("")
+
+
+    const {user}=useAuth()
+
+    function verificationAjout(){
+        if(!user || user.role !== "admin"){
+            alert("seul l'admin a le droit d'ajouter un produit")
+        }
+        else{
+            navigate("/ajouterProduit")
+        }
+    }
 
     const {data:categoriesData} = useQuery({
         queryKey:["categorie_list",categorie,sort],
         queryFn: voir_categorie
     })
 
-    const [search,setSearch]= useState("")
+   
 
     const {ajouterAuPanier}= useContext(AppContext)
     const {data:produitsData} = useQuery({
@@ -73,7 +87,7 @@ const ProduitsPage = () => {
                    
 
                     <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
-                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white flex items-center justify-center text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
+                        <h3 onClick={verificationAjout} className='text-white flex items-center justify-center text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
                         
                     </div>
                         <div className='md:px-3 px-2 py-1 bg-white mt-16'>

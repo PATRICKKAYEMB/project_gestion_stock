@@ -22,6 +22,7 @@ import Sidebar from '@/components/Sidebar'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { LayoutGrid, List } from 'lucide-react'
 import SideBarMobile from '@/components/SideBarMobile'
+import useAuth from '@/hooks/useAuth'
 
 
 
@@ -32,6 +33,8 @@ const ProduitGridPage = () => {
     const [categorie,setCategorie]= useState("")
     const [sort,setSort] = useState("")
     const [search,setSearch]= useState('')
+
+    const {user}=useAuth()
 
     const {data:categoriesData} = useQuery({
         queryKey:["categorie_list",categorie,sort],
@@ -47,6 +50,15 @@ const ProduitGridPage = () => {
         }))
     })
 
+
+    function verificationAjout(){
+        if (!user || user.role !== "admin"){
+            alert("seul l'admin a le droit d'ajouter un produit")
+        }
+        else{
+            navigate("/ajouterProduit")
+        }
+    }
     const statusColors = {
         red: "bg-red-500",
         green: "bg-green-500",
@@ -68,7 +80,7 @@ const ProduitGridPage = () => {
                 <SideBarMobile/>
                     <div className='px-8 pt-6'>
                     <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
-                        <h3 onClick={()=> navigate("/ajouterProduit")} className='text-white text-lg'>ajouter</h3>
+                        <h3 onClick={verificationAjout} className='text-white text-lg'>ajouter</h3>
                         
                     </div>
                         <div className='px-3 py-1 bg-white mt-16'>
