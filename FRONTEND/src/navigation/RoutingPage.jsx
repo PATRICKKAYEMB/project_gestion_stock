@@ -20,6 +20,7 @@ import CategoriePage from '@/pages/CategoriePage'
 import AjouterCategoriePage from '@/pages/AjouterCategoriePage'
 import ModifierCategoriePage from '@/pages/ModifierCategoriePage'
 import PanierPage from '@/pages/PanierPage'
+import RecommandationPage from '@/pages/RecommandationPage'
 
 
 const RoutingPage = () => {
@@ -45,6 +46,7 @@ const RoutingPage = () => {
         <Route path='/categorie' element={<ProtectRoute><CategoriePage/></ProtectRoute>} />
         <Route path='/ajouterCategorie' element={<ProtectRoute><AjouterCategoriePage/></ProtectRoute>} />
         <Route path='/modifierCategorie/:id' element={<ProtectRoute><ModifierCategoriePage/></ProtectRoute>} />
+        <Route path='/recommandation' element={<ProtectRoute><RecommandationPage/></ProtectRoute>} />
       </Routes>
   )
 }

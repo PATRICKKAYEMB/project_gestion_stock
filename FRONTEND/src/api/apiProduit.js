@@ -23,7 +23,7 @@ export async function voir_produict({categorie,sort,name}={}){
         return response.data 
         
     } catch (error) {
-        console.error("voici l'erreur dans voir produit")
+        console.error("voici l'erreur dans voir produit",error)
 
     }
 }
@@ -53,6 +53,7 @@ export async function Ajouter_produit(formData){
 export async function modifier_produit({formData,id}){
     try {
         const response = await api.put(`produit/${id}/`,formData)
+       
         return response.data
         
     } catch (error) {
@@ -71,5 +72,17 @@ export async function supprimer_produit(id){
         console.error("voici l'erreur dans supprimer produit ",error)
         throw error
         
+    }
+}
+
+ export  async function recommandation_produit(id){
+    try{
+        const response= await api.get(`get_product_recommandations/${id}/`)
+         console.log("voici la reponse dans modifier produit",response.data)
+        return response.data
+    }
+    catch(error){
+        console.error("voici l'erreur dans recommandation produit",error)
+        throw error
     }
 }

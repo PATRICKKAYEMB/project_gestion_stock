@@ -557,7 +557,7 @@ def download_story_vente(request):
 
 
 @api_view(['GET']) # Indique que cette vue n'accepte que les requêtes GET
-def get_product_recommendations_api(request, product_id):
+def get_product_recommandations_api(request, product_id):
     try:
         # --- CHOISISSEZ LA BONNE LIGNE ICI SELON LE TYPE DE L'INDEX DE VOTRE PIVOT_TABLE ---
         # Si votre pivot_table.index.dtype est 'int64' (entier) :
