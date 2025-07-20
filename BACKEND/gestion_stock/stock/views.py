@@ -47,7 +47,7 @@ def get_user(request):
 ### GESTION CATECORIE 
     
 
-@api_view(["GET","POST","DELETE","PUT"])
+@api_view(["POST","DELETE","PUT"])
 @permission_classes([IsAuthenticated])
 
 def categorie(request,id_cat=None):
@@ -109,6 +109,22 @@ def categorie(request,id_cat=None):
 
 
     return Response({"message": "Méthode non autorisée"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def get_categories(request,id_cat=None):
+     
+     if id_cat is not None:
+         categorie= get_object_or_404(Categorie,id=id_cat)
+         serializer= CategorieSerializer(categorie)
+         return Response(serializer.data,status=status.HTTP_200_OK)
+     
+     
+     categories = Categorie.objects.all()
+     serializer= CategorieSerializer(categories,many=True)
+     return Response (serializer.data, status= status.HTTP_200_OK)
+
+
 
 
 
@@ -189,6 +205,34 @@ def produit(request,id_prod=None):
         else:
              print(serializer.errors)
              return Response({"message": "Méthode non autorisée"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+@api_view(["GET"])
+
+def get_produits(request,id_prod=None):
+    if id_prod is not None:
+        produit =get_object_or_404(Produit,id=id_prod)
+        serializer= ProduitSerializer(produit)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    categorie= request.query_params.get("categorie")
+    recherche = request.query_params.get("recherche")
+
+    produits= Produit.objects.all()
+    if categorie:
+        produits.filter(categorie__id=categorie)
+    if recherche:
+        produits.filter(name__icontains=recherche)
+
+    serializer= ProduitSerializer(produits,many=True)
+
+    return Response(serializer.data,status=status.HTTP_200_OK)
+
+    
+    
+
 
 
 @api_view(["GET"])
@@ -348,9 +392,8 @@ def historiquePerte(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 
-def venteProduit(request):
+def AchatProduit(request):
     data = request.data
-    print("Données reçues :", data)  # Ajout debug
     produits = data.get("produits", [])
     client_name = data.get("client")
     date_vente = data.get("date_vente")
@@ -404,7 +447,7 @@ def venteProduit(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def achatProduit(request,id_prod):
+def ReApprovisionnerProduit(request,id_prod):
     produit =get_object_or_404(Produit,id=id_prod)
 
     serializer= ApprovisionnerProduitSerializer(data=request.data)
@@ -552,13 +595,14 @@ def download_story_vente(request):
     response=HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ventes.csv"'
     writer= csv.writer(response)
-    writer.writerow(['trasaction_Id','produit_id','produit_nom','prix','categorie_id','categorie nom','quantite','date_vente'])
+    writer.writerow(['trasaction_Id','produit_id','produit_nom','prix','produit_image','categorie_id','categorie nom','quantite','date_vente'])
     for vente in ventes:
         writer.writerow([
             vente.transaction_id,
             vente.produit.id,
             vente.produit.name,
             vente.produit.prix,
+            vente.produit.image,
             vente.produit.categorie.id,
             vente.produit.categorie.name    ,
             vente.quantite,
@@ -587,6 +631,31 @@ def get_product_recommandations_api(request, product_id):
     serializer = RecommendedProductSerializer(recommendations_data, many=True)
     
     return Response({'recommendations': serializer.data}, status=status.HTTP_200_OK)
+
+
+
+
+@api_view(["GET"])
+
+def historiqueClient(request):
+    user= request.user
+    user_id=user.id 
+
+    try:
+        client= get_object_or_404(Client,id=user_id)
+        ventes= VenteProduit.objects.filter(client=client)
+
+        serializer= VenteProduitSerializer(ventes)
+
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    
+    except:
+        return Response(serializer.error,status.HTTP_400_BAD_REQUEST)
+
+
+
+    
+
 
 
 

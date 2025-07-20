@@ -3,8 +3,8 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_product_recommandations_api,produit,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
-                    historiquePerte,historiqueVente,venteProduit,achatProduit,perteProduit,notification,countNotification)
+from .views import (get_product_recommandations_api,produit,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+                    historiquePerte,get_produits,historiqueVente,AchatProduit,ReApprovisionnerProduit,perteProduit,notification,countNotification)
 
 
 urlpatterns = [
@@ -12,11 +12,15 @@ urlpatterns = [
     # GESTION PRODUIT
    path("produit/",produit,name="produit"),
    path("produit/<int:id_prod>/", produit, name="produit"),
+   path("get_produit/",get_produits,name="get_produit"),
+   path("get_produit/<int:id_prod>/",get_produits,name="get_produit"),
 
    # GESTION CATEGORIE
 
    path("categorie/", categorie, name="categorie"),
    path("categorie/<int:id_cat>/",categorie, name="categorie"),
+   path("get_categorie/",get_categories,name="get_categorie"),
+   path("get_categorie/<int:id_cat>/",get_categories,name="get_categorie"),
 
 
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -33,8 +37,8 @@ urlpatterns = [
     path("historiqueAchat/", historiqueAchat, name="historiqueAchat"),
     path("historiquePerte/", historiquePerte, name="historiquePerte"),
 
-      path("venteProduit/", venteProduit, name="venteProduit"),   
-    path("achatProduit/<int:id_prod>/", achatProduit, name="achatProduit"),
+      path("achatVente/", AchatProduit, name="venteProduit"),   
+    path("reapprovisionner/<int:id_prod>/", ReApprovisionnerProduit, name="achatProduit"),
     path("perteProduit/<int:id_prod>/", perteProduit, name="perteProduit"),
 
     path("notification/",notification, name="notification"),

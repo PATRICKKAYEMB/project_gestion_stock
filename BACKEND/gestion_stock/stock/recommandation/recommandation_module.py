@@ -101,16 +101,25 @@ def get_recommendations(target_product_id, top_k=5):
     seen_names = set() 
 
     for pid in recommended_product_ids_after_target_exclusion:
-        # Assurez-vous que pid a le bon type pour la recherche dans df_produits_map.index (déjà vérifié int64)
         pid_lookup = pid 
         
         if pid_lookup in df_produits_map.index:
             product_name = df_produits_map.loc[pid_lookup, 'produit_nom']
+            product_price = df_produits_map.loc[pid_lookup, 'prix']
+            product_image = df_produits_map.loc[pid_lookup, 'produit_image']
+
             if product_name not in seen_names:
-                final_recommendations.append({'id': int(pid_lookup), 'name': product_name})
+                final_recommendations.append({
+                    'id': int(pid_lookup),
+                    'name': product_name,
+                    'prix': float(product_price),     # si prix est numérique
+                    'image': product_image
+                })
                 seen_names.add(product_name)
             else:
-                print(f"INFO (get_recommendations): ID {pid_lookup} ('{product_name}') a un nom DÉJÀ VU. Ignoré pour éviter les doublons.") 
+                print(f"INFO: ID {pid_lookup} ('{product_name}') déjà vu. Ignoré.")
         else:
-            print(f"INFO (get_recommendations): Nom non trouvé pour l'ID : {pid_lookup} dans df_produits_map. Cette recommandation sera ignorée.")
-    return final_recommendations
+            print(f"INFO: ID {pid_lookup} non trouvé dans df_produits_map. Ignoré.")
+
+    
+    return final_recommendations[:4]
