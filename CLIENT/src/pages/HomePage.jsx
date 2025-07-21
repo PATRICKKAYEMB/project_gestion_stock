@@ -40,8 +40,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
             <div className="space-y-6">
               <div className="flex items-center space-x-2 text-pink-600">
-                <div className="w-2 h-2 bg-pink-600 rounded-full"></div>
-                <span className="text-sm font-medium">Deal of the Week</span>
+               
               </div>
 
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
@@ -51,9 +50,9 @@ const HomePage = () => {
               <div className="flex items-center space-x-4">
                 <Link
                   to="/boutique"
-                  className="bg-white px-6 py-3 rounded-lg text-gray-900 font-medium hover:shadow-md transition-all duration-300"
+                  className="bg-white px-6 py-3 text-base rounded-lg text-gray-900 font-medium hover:shadow-md transition-all duration-300"
                 >
-                  Shop Now
+                  Acheter maitenant
                 </Link>
                 <div className="flex items-center space-x-4">
                   <img

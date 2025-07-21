@@ -27,7 +27,7 @@ const ProduitsPage = () => {
   }
 
   return (
-    <main className='flex min-h-screen bg-gradient-to-br from-orange-100 via-red-100 to-yellow-50
+    <main className='flex min-h-screen bg-[#F1F1F1]
 '>
       {/* left side */}
       <aside className='w-[220px] bg-white border-r border-gray-200 p-5'>

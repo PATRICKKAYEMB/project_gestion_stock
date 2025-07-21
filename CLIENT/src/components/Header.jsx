@@ -19,10 +19,10 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">eT</span>
+            <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">Tv</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">eTrade</span>
+            <span className="text-lg font-bold text-gray-900">TAG<span className="text-[12px] font-bold text-orange-600">Vision</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -36,22 +36,14 @@ const Header = () => {
             <Link to="/produit" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               produits
             </Link>
-            <Link to="/details" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-              details
-            </Link>
-            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-              Blog
-            </Link>
-            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-              Contact
-            </Link>
+           
+            
+           
           </nav>
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+           
             
             <button 
               onClick={handleCartClick}
@@ -66,8 +58,8 @@ const Header = () => {
              
             </button>
             
-            <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-              <User className="w-5 h-5" />
+            <button onClick={()=>navigate("/login")} className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
+              <User className="w-8 h-8" />
             </button>
 
             {/* Mobile menu button */}

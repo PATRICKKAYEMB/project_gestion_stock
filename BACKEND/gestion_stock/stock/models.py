@@ -15,6 +15,7 @@ class User(AbstractUser):
     ROLE_CHOICES = (
     ('admin', 'Administrateur'),
     ('gestionnaire', 'Gestionnaire'),
+    ('client', 'Client'),
 )
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
@@ -83,6 +84,8 @@ class Produit (models.Model):
              
 class Client(models.Model):
     name=models.CharField( max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    email=models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
