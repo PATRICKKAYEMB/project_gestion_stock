@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_product_recommandations_api,produit,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (get_product_recommandations_api,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,get_produits,historiqueVente,AchatProduit,ReApprovisionnerProduit,perteProduit,notification,countNotification)
 
 
@@ -14,6 +14,9 @@ urlpatterns = [
    path("produit/<int:id_prod>/", produit, name="produit"),
    path("get_produit/",get_produits,name="get_produit"),
    path("get_produit/<int:id_prod>/",get_produits,name="get_produit"),
+
+   #CLIENT
+   path("creationClient/",creation_compte),
 
    # GESTION CATEGORIE
 

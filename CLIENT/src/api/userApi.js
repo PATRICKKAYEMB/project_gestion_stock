@@ -1,10 +1,10 @@
-import { api } from "./api"
+import { securedApi } from "./api"
 
 
 
-export const creationCompte = async ({data})=>{
+export const creationCompte = async (data)=>{
     try {
-        const response = await api.post("creerCompteClient/",data)
+        const response = await securedApi.post("creationClient/",data)
         return response.data
     } catch (error) {
         console.log("voici l'erreur dans creation compte client",error)
@@ -12,9 +12,9 @@ export const creationCompte = async ({data})=>{
     }
 }
 
-export const connexion = async ({data}) =>{
+export const connexion = async (data) =>{
     try {
-        const response = await api.post("connexion/",data)
+        const response = await securedApi.post("token/",data)
         return response.data
    
     } catch (error) {

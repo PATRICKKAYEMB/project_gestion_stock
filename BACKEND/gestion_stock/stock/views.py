@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.db.models.functions import TruncDay
+from django.contrib.auth import get_user_model
 from django import views
 import uuid
 from django.db import transaction
@@ -127,13 +128,45 @@ def get_categories(request,id_cat=None):
 
 
 
+# GESTION UTILISATEUR
+
+
+
+
+
+User = get_user_model()
+
+@api_view(["POST"])
+def creation_compte(request):
+    print("========= REQUÊTE REÇUE =========")
+    print("Données reçues:", request.data)
+
+    try:
+        password = request.data.get("password")
+        name = request.data.get("name")
+        email = request.data.get("email")
+        role = request.data.get("role", "client")  # Par défaut 'client'
+
+        if not all([password, name, email]):
+            return Response({"error": "Champs requis manquants"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Ajoute username=name
+        user = User.objects.create_user(username=name, email=email, password=password, role=role)
+
+        # Création du client lié à l'utilisateur
+        client = Client.objects.create(user=user, name=name)
+
+        serializer = ClientSerializer(client)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        print("Erreur lors de la création du compte:", str(e))
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
 # GESTION PRODUIT
-
-
-
 @api_view(["GET","POST","PUT","DELETE"])
 @permission_classes([IsAuthenticated])
 
