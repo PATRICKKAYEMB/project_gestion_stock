@@ -85,10 +85,29 @@ class Produit (models.Model):
 class Client(models.Model):
     name=models.CharField( max_length=50)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    email=models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+class Paiement(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="paiements")
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    mode_paiement = models.CharField(max_length=50, choices=[
+        ('en_ligne', 'Paiement en ligne'),
+        ('cash', 'Espèces'),
+        ('mobile_money', 'Mobile Money'),
+        ('carte', 'Carte bancaire'),
+    ])
+    statut = models.CharField(max_length=20, choices=[
+        ('en_attente', 'En attente'),
+        ('valide', 'Validé'),
+        ('echoue', 'Échoué'),
+    ])
+    date_paiement = models.DateTimeField(auto_now_add=True)
+    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.client.name} - {self.mode_paiement} - {self.statut}"
 
 
 class VenteProduit(models.Model):
@@ -98,6 +117,8 @@ class VenteProduit(models.Model):
     date_vente = models.DateTimeField(default=timezone.now) 
     transaction_id = models.CharField(max_length=100, db_index=True)
     total=models.IntegerField(null=True,blank=True)
+    paiement = models.ForeignKey(Paiement, on_delete=models.SET_NULL, null=True, blank=True)
+
 
     def save(self,*args, **kwargs):
         self.total= self.produit.prix*self.quantite
@@ -137,3 +158,6 @@ class Notification(models.Model):
     type_alerte=models.TextField()
     description=models.TextField()
     date_alerte=models.DateField()
+
+
+

@@ -6,6 +6,7 @@ from django.db import transaction
 from django.db.models import Sum, F
 from django.http import HttpResponse
 from  .recommandation.recommandation_module import get_recommendations
+from .models import Paiement
 
 import csv
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -658,4 +659,178 @@ def historiqueClient(request):
 
 
 
+
+
+
+  # Assure-toi d'importer ce modèle aussi
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def AchatProduit(request):
+    data = request.data
+    produits = data.get("produits", [])
+    client_name = data.get("client")
+    date_vente = data.get("date_vente")
+    mode_paiement = data.get("mode_paiement", "espece")  # par défaut espèces
+    montant_total = data.get("montant_total")  # optionnel
+
+    if not produits:
+        return Response({"message": "Aucun produit fourni"}, status=400)
+    if not client_name:
+        return Response({"message": "Client manquant"}, status=400)
+
+    client_obj, _ = Client.objects.get_or_create(name=client_name)
+    transaction_id = str(uuid.uuid4())
+
+    try:
+        with transaction.atomic():
+            total_global = 0
+
+            for item in produits:
+                prod_id = item.get("id")
+                quantite = item.get("quantite")
+
+                if not prod_id or not quantite:
+                    return Response({"message": "Données produit invalides"}, status=400)
+
+                produit = get_object_or_404(Produit, id=prod_id)
+
+                if produit.quantite < quantite:
+                    raise ValueError(f"Stock insuffisant pour {produit.name}")
+
+                total = produit.prix * quantite
+                total_global += total
+
+                VenteProduit.objects.create(
+                    produit=produit,
+                    quantite=quantite,
+                    total=total,
+                    client=client_obj,
+                    date_vente=date_vente,
+                    transaction_id=transaction_id
+                )
+
+                produit.quantite -= quantite
+                produit.save()
+
+            # Créer l'enregistrement de paiement
+            Paiement.objects.create(
+                client=client_obj,
+                montant=montant_total or total_global,
+                mode_paiement=mode_paiement,
+                statut="valide",
+                transaction_id=transaction_id
+            )
+
+        return Response({"message": "Vente + Paiement enregistrés"}, status=201)
+
+    except ValueError as e:
+        return Response({"message": str(e)}, status=400)
+
+
+
+
+
+
+# donc mobile money 
+
+@api_view(["POST"])
+def initier_paiement_mobile_money(request):
+    montant = request.data.get("montant")
+    numero = request.data.get("numero")
+    client_name = request.data.get("client")
+    produits = request.data.get("produits", [])
+    date_vente = request.data.get("date_vente")
+
+    if not produits or not client_name:
+        return Response({"message": "Client ou produits manquants"}, status=400)
+
+    transaction_id = str(uuid.uuid4())
+
+    # Enregistrer les infos provisoirement dans un "panier" (à toi de créer ce modèle si tu veux)
+    # Ou tu peux directement les passer dans le callback comme métadonnées (si l'API supporte ça)
+
+    headers = {
+        "Authorization": "Bearer VOTRE_CLE_SECRETE",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "amount": montant,
+        "phone_number": numero,
+        "reference": transaction_id,
+        "currency": "CDF",
+        "callback_url": f"https://votre-backend.com/api/paiement/callback/"  # à adapter
+    }
+
+    response = requests.post("https://sandbox.api-entreprise.com/paiement", json=payload, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+
+        # Crée le paiement avec statut en attente
+        client_obj, _ = Client.objects.get_or_create(name=client_name)
+        Paiement.objects.create(
+            client=client_obj,
+            montant=montant,
+            mode_paiement="mobile_money",
+            statut="en_attente",
+            transaction_id=transaction_id
+        )
+
+        # Astuce : tu peux stocker les produits et quantités en session, ou dans une table "CommandeTemporaire"
+        return Response({"status": "en_attente", "transaction_id": transaction_id})
+    else:
+        return Response({"message": "Erreur lors du paiement", "detail": response.text}, status=400)
+    
+@api_view(["POST"])
+@permission_classes([AllowAny])  # L'API externe n'a pas besoin d'authentification
+def paiement_callback(request):
+    transaction_id = request.data.get("reference")
+    statut_api = request.data.get("status")  # par exemple: "SUCCESS", "FAILED"
+    produits = request.data.get("produits", [])  # À condition que l'API te renvoie ça
+
+    try:
+        paiement = Paiement.objects.get(transaction_id=transaction_id)
+
+        if statut_api == "SUCCESS":
+            paiement.statut = "valide"
+            paiement.save()
+
+            # Récupérer client et enregistrer la vente réelle
+            client_obj = paiement.client
+            total_global = 0
+
+            for item in produits:
+                prod_id = item.get("id")
+                quantite = item.get("quantite")
+
+                produit = get_object_or_404(Produit, id=prod_id)
+
+                if produit.quantite < quantite:
+                    return Response({"message": f"Stock insuffisant pour {produit.name}"}, status=400)
+
+                total = produit.prix * quantite
+                total_global += total
+
+                VenteProduit.objects.create(
+                    produit=produit,
+                    quantite=quantite,
+                    total=total,
+                    client=client_obj,
+                    transaction_id=transaction_id
+                )
+
+                produit.quantite -= quantite
+                produit.save()
+
+            return Response({"message": "Paiement confirmé, vente enregistrée."}, status=200)
+
+        else:
+            paiement.statut = "echoue"
+            paiement.save()
+            return Response({"message": "Paiement échoué."}, status=200)
+
+    except Paiement.DoesNotExist:
+        return Response({"message": "Transaction non reconnue"}, status=404)
 
