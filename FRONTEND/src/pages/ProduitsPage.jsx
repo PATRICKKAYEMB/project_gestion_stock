@@ -24,7 +24,7 @@ import { AppContext } from '@/context/AppContext'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { MdAdd, MdOutlineShoppingCart } from 'react-icons/md'
 import SideBarMobile from '@/components/SideBarMobile'
-import useAuth from '@/hooks/useAuth'
+
 
 
 
@@ -35,15 +35,20 @@ const ProduitsPage = () => {
      const [search,setSearch]= useState("")
 
 
-    const {user}=useAuth()
+  
 
     function verificationAjout(){
-        if(!user || user.role !== "admin"){
+
+         navigate("/ajouterProduit")
+
+         {/***
+             if(!user || user.role !== "admin"){
             alert("seul l'admin a le droit d'ajouter un produit")
         }
-        else{
-            navigate("/ajouterProduit")
-        }
+            
+            */}
+       
+    
     }
 
     const {data:categoriesData} = useQuery({
@@ -86,7 +91,7 @@ const ProduitsPage = () => {
 
                    
 
-                    <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
+                    <div  className='float-right bg-orange-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
                         <h3 onClick={verificationAjout} className='text-white flex items-center justify-center text-lg'>  ajouter <MdAdd size={22} className='ml-3'/></h3>
                         
                     </div>
@@ -111,13 +116,13 @@ const ProduitsPage = () => {
                                     </div>
                 
                                     
-                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' onClick={()=>(navigate("/produits"))}>
+                                    <div className='bg-orange-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer' onClick={()=>(navigate("/produits"))}>
                                            
                                             <List size={20} color='white' />
                                             
                                     </div>
                 
-                                    <div className='bg-blue-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'onClick={()=>(navigate("/ProduitGrid"))} >
+                                    <div className='bg-orange-900 px-2 py-2 rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'onClick={()=>(navigate("/ProduitGrid"))} >
                                          
                                            <LayoutGrid size={20} color='white'/>
                                           
@@ -126,7 +131,7 @@ const ProduitsPage = () => {
 
                                    
                                     {filter && (
-                                         <div className='w-[160px] px-4 py-5 bg-blue-900 absolute top-10 right-0 rounded-md'>
+                                         <div className='w-[160px] px-4 py-5 bg-orange-900 absolute top-10 right-0 rounded-md'>
               
                                     <div className="mb-4">
                                         <Select  onValueChange={(val)=>setCategorie(val)} >
@@ -184,10 +189,10 @@ const ProduitsPage = () => {
                                         <div className="overflow-x-hidden overflow-x-scroll h-[70vh]">
                 <table className="w-full  mt-4 bg-white ">
                 <thead>
-                    <tr className=" bg-blue-900 border-1 w-full border-gray-400">
+                    <tr className=" bg-orange-900 border-1 w-full border-gray-400">
                     <th className="  text-white hidden md:table-cell text-center">N°</th>
                     <th className="  text-white  text-center">produit</th>
-                    <th className="  text-white hidden md:table-cell text-center">Categorie</th>
+                   
                     <th className="   text-white hidden md:table-cell text-center">prix</th>
                     <th className="   text-white  text-center">quantite</th>
                     
@@ -212,7 +217,7 @@ const ProduitsPage = () => {
                                    
                                     
                                     </td>
-                                <td className=" py-1  mb-3 hidden md:table-cell text-center">{prod.categorie}</td>
+                               
                                
                                 <td className="py-1  mb-3 hidden md:table-cell text-center">{prod.prix}</td>
                                 <td className="py-1  mb-3  text-center text-black">{prod.quantite}</td>

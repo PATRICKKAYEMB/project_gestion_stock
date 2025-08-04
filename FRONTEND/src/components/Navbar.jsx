@@ -24,9 +24,9 @@ const Navbar = ({name}) => {
 const navigation = useNavigate()
   const notifications= data??0
   return (
-    <div className='md:flex-1 w-full md:ml-2 fixed md:relative flex z-20 justify-between bg-blue-900 px-5 py-1 h-[60px]  items-center ' >
+    <div className='md:flex-1 w-full shadow-md shadow-gray-300  md:ml-2 fixed md:relative flex z-20 justify-between bg-white px-5 py-1 h-[60px]  items-center ' >
       <BiMenu size={60} color='white ' className='top-[10px] lg:hidden md:hidden block right-[20px] cursor-pointer' onClick={()=>SetToggleMobile(!toggleMobile)} />
-        <h3 className='text-white text-2xl font-bold'>{name}</h3> 
+        <h3 className='text-black text-2xl font-bold'>{name}</h3> 
         
         
         <div className='flex items-center justify-center gap-3'>
@@ -34,20 +34,20 @@ const navigation = useNavigate()
            <div className='relative cursor-pointer ' onClick={()=>navigation("/panier")}>
              
              
-              <MdOutlineShoppingCart size={35} color='white' />
+              <MdOutlineShoppingCart size={35} color='black' />
              
              {
-                countProduits > 0 ? <p className='absolute -top-1 right-0 px-1 text-[10px] text-white rounded-full py-0.5 bg-red-600'>{countProduits}</p>:""
+                countProduits > 0 ? <p className='absolute -top-1 right-0 px-1 text-[10px] text-black rounded-full py-0.5 bg-red-600'>{countProduits}</p>:""
              }
               
           </div>
           
           <div className='relative cursor-pointer ' onClick={()=>navigation("/notification")}>
-              <BellIcon size={35} color='white' />
+              <BellIcon size={35} color='black' />
 
-              <p className='absolute -top-1 right-0 px-1 text-[10px] text-white rounded-full py-0.5 bg-red-600'>{notifications?.count}</p>
+              <p className='absolute -top-1 right-0 px-1 text-[10px] text-black rounded-full py-0.5 bg-red-600'>{notifications?.count}</p>
           </div>
-            <BiUser size={35} color='white'/>
+            <BiUser size={35} color='black'/>
            
         </div>
         

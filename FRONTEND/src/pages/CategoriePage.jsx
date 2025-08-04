@@ -14,17 +14,13 @@ const CategoriePage = () => {
     queryKey: ['categorie'],
     queryFn: voir_categorie,
   })
-  const {user}= useAuth()
+ 
    const navigate =useNavigate()
 
   function verificationAjout(){
-    console.log("bouton cliqué")
-    if (!user || user.role !== "admin"){
-      alert("seul l'admin a le droit d'ajouter une categorie")
-    }
-    else{
+    
         navigate("/ajouterCategorie")
-    }
+    
   }
   
   const categories = data || []
@@ -35,13 +31,13 @@ const CategoriePage = () => {
     <main className="flex w-full">
       <Sidebar />
       
-      <div className="flex-1 h-screen bg-[#F5F5F5] relative overflow-auto">
+      <div className="flex-1 h-screen bg-[#F1F1F1] relative overflow-auto">
         <Navbar />
         <SideBarMobile/>
         <div className="w-full flex items-center justify-between mt-15 md:mt-8  px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Catégories</h3>
         </div>
-                       <span className='cursor-pointer text-center  text-white hover:bg-black hover:duration-75 px-4 py-2 bg-blue-900 ml-[260px]  mb-9' onClick={verificationAjout}>ajouter</span>
+                       <span className='cursor-pointer text-center  text-white hover:bg-black hover:duration-75 px-4 py-2 bg-orange-900 ml-[260px]  mb-9' onClick={verificationAjout}>ajouter</span>
         <div className="w-full  flex items-center px-6">
           {isLoading && <p>Chargement...</p>}
          

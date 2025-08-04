@@ -9,24 +9,31 @@ import Navbar from '@/components/Navbar'
 
 const DashbordPage = () => {
   return (
-    <div className='w-full flex bg-[#F5F5F5]'>
+    <div className='w-full flex bg-[#F1F1F1]'>
         <Sidebar/>
 
         <main className='flex-1 px-5 '>
           <Navbar/>
           <SideBarMobile/>
-            <div className='gap-8 grid lg:grid-cols-4  md:grid-cols-3 px-10 pt-15 w-full'>
+            <div className='gap-8 grid lg:grid-cols-3  md:grid-cols-3 px-10 pt-10 w-full'>
                 <CountNotification/>
-                <CountPerte/>
+               
                 <CountVente/>
                 <CountProduits/>
             </div>
 
-            <div className='w-full shadow-md bg-white mt-8 h-screen relative'>
-                <h3 className='text-center bg-white px-2 py-2 text-2xl absolute -top-6 left-[38%]'> Mes transations</h3>
+            <div className='grid lg:grid-cols-2 gap-5'>
+                       <div className='w-full shadow-md rounded-2xl shadow-gray-400  bg-white mt-8 h-[300px] relative'>
+              
+                      </div> 
+
+                       <div className='w-full shadow-md rounded-2xl shadow-gray-400  bg-white mt-8 h-[300px] relative'>
+                          
+                       </div> 
 
 
-           </div>   
+            </div>
+             
 
 
 

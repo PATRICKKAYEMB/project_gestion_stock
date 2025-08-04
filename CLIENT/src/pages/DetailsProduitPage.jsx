@@ -51,7 +51,7 @@ console.log("✅ Produits recommandés reçus :", recommandationProduit)
           <div className="flex space-x-4">
             <button
               onClick={() => ajouterPanier(detailProduit)}
-              className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+              className="flex-1 bg-orange-900 text-white py-3 px-6 rounded-lg cursor-pointer duration-300 font-medium hover:bg-black transition-colors flex items-center justify-center space-x-2"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>Ajouter au panier</span>
@@ -66,23 +66,36 @@ console.log("✅ Produits recommandés reçus :", recommandationProduit)
         </div>
       </div>
 
-      <div className="mt-14">
+      <div className="mt-9 mb-8">
         <h3 className="text-3xl mb-6 font-semibold text-gray-800">Produits recommandés</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-               {recommandationProduit.map((produit) => (
-                          <div className='p-4 flex flex-col items-center text-center' onClick={()=>navigate(`/details/${produit.id}/`)}>
-                                <img
-                                  src={`${BASEIMAGEUrl}/media/${produit.image}`}
-                                  alt={produit.name}
-                                  className='h-36 w-29 object-cover mb-3 rounded'
-                                />
-                                <h3 className='text-base  text-gray-800'>{produit.name}</h3>
-                               
-                                <span className='mt-2 text-indigo-600 font-bold'>{produit.prix} Fc</span>
-                              </div>
-                        ))}
+       
 
-        </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {recommandationProduit.map((produit) => (
+
+                <div className='bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow'>
+                <div
+                  key={produit.id}
+                  className="p-4 flex flex-col items-center text-center cursor-pointer  "
+                  onClick={() => navigate(`/details/${produit.id}/`)}
+                >
+                  <div className="w-36 h-36  flex items-center justify-center bg-white rounded overflow-hidden">
+                    <img
+                      src={`${BASEIMAGEUrl}/media/${produit.image}`}
+                      alt={produit.name}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <h3 className="text-base text-gray-800 mt-3">{produit.name}</h3>
+                  <span className="mt-2 text-indigo-600 font-bold">{produit.prix} Fc</span>
+                </div>
+
+                 </div>
+              ))}
+
+             
+            </div>
+
       </div>
     </div>
   )

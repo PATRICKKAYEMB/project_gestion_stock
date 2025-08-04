@@ -34,7 +34,7 @@ const StatistiquePage = () => {
     queryFn:()=>categorieVente(dateDebut,dateFin)
   })
   return (
-    <div className='w-full flex '>
+    <div className='w-full flex  bg-[#F1F1F1]'>
 
    <Sidebar/>
    
@@ -57,7 +57,7 @@ const StatistiquePage = () => {
                   </div>
       
                   {filter && (
-                    <div className="absolute right-0 w-[200px] top-8 z-10 bg-orange-900 px-2 py-5 rounded-md">
+                    <div className="absolute right-0 w-[200px] top-8 z-10 bg-blue-600 px-2 py-5 rounded-md">
                       <div className="mb-4">
                         
                       
@@ -101,16 +101,14 @@ const StatistiquePage = () => {
                 transition={{duration:1}}
             >
 
-               <StartCard name="Total vente" icon={Zap} value="12 345 fc" color="#6366f1" />
-               <StartCard name="categories" icon={Users} value="45" color="#885CF1" />
-               <StartCard name="produits" icon={ShoppingBag} value="45" color="#EC4899" />
+              
               
             </motion.div>
            {/** -------charts------------- */}
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-9 h-[50vh]  '>
               <CategorieChart categorieVentes={categorieVentes}/>
-              <SalersCharts salesdata={salesdata}/>
+             <SalersCharts salesdata={salesdata}/>
                
           </div>
 

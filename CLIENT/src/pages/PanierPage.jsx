@@ -1,14 +1,16 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext} from 'react'
 import { AppContext } from '../Context/AppContext'
 import { BASEIMAGEUrl } from '../api/api'
 import { ShoppingCartIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+
 
 
 
 const PanierPage = () => {
   const { panier, setPanier } = useContext(AppContext)
-  const [dateVente, setDateVente] = useState('')
-  const [client, setClient] = useState('')
+  const navigate= useNavigate()
+
 
   function increase(produit) {
     const updatePanier = panier.map((p) => {
@@ -38,7 +40,7 @@ const PanierPage = () => {
   const total = panier.reduce((acc, produit) => acc + produit.prix * produit.quantite, 0)
 
   return (
-    <main className='w-full flex-1 h-[100vh] bg-[#F1F1F1]'>
+    <main className='w-full px-[5%] flex-1 h-[100vh] bg-[#F1F1F1]'>
     
       <h2 className="text-2xl font-bold text-center mt-10 text-gray-800">Produits dans le panier</h2>
 
@@ -83,43 +85,18 @@ const PanierPage = () => {
         )}
 
         {panier.length > 0 && (
-          <div className='w-[400px] py-3 border-2 px-4 bg-white rounded-2xl'>
-            <h3 className='text-center text-2xl mt-5'>Formulaire de vente</h3>
-
-            <div className='mt-8'>
-              <div className='mb-2'>
-                <h3>Nom du client :</h3>
-              </div>
-              <input
-                type='text'
-                placeholder='Nom du client'
-                value={client}
-                onChange={(e) => setClient(e.target.value)}
-                className='p-2 border rounded w-full mb-4'
-              />
-            </div>
-
-            <div>
-              <div className='mb-2'>
-                <h3>Date de vente :</h3>
-              </div>
-              <input
-                type='datetime-local'
-                value={dateVente}
-                onChange={(e) => setDateVente(e.target.value)}
-                className='p-2 border rounded w-full mb-4'
-              />
-            </div>
+          <div className='w-[400px] py-3 flex flex-col px-4 items-center justify-center h-[70vh] rounded-2xl'>
+               
 
             <h3 className='text-2xl float-right font-bold mb-4'>Total : {total} FC</h3>
             <button
-              className='bg-blue-600 text-white px-6 py-2 text-xl mt-10 w-full rounded'
+              className='bg-orange-900 text-white px-6 py-2 text-xl mt-10 w-full rounded'
               onClick={() => {
-                // À compléter : action pour valider la vente
-                alert(`Vente enregistrée pour ${client} le ${dateVente}`);
+                navigate("/payement")
+                
               }}
             >
-              Valider la vente
+              Acheter MAintenant
             </button>
           </div>
         )}

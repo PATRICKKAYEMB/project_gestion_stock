@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {Routes,Route} from "react-router-dom"
 import ProduitsPage from '../pages/ProduitsPage'
 import VentePage from '../pages/VentePage'
@@ -34,12 +35,12 @@ const RoutingPage = () => {
 
               {/**        admin routes                         */}
          
-                   <Route path='/approvisionner/:id' element={<AdminRoute> <ApprovisionnerPage/> </AdminRoute>}/>
-                   <Route path='/ajouterPerte/:id' element={ <AdminRoute>  <AjouterPertePage/> </AdminRoute>  }/>
-                   <Route path='/modifierProduit/:id' element={ <AdminRoute><ModifierProduitPage/> </AdminRoute> }/>
-                   <Route path='/ajouterProduit' element={ <AdminRoute> <AjouterProduitPage/> </AdminRoute>  }/>
-                   <Route path='/ajouterCategorie' element={<AdminRoute><AjouterCategoriePage/> </AdminRoute>  } />
-                   <Route path='/modifierCategorie/:id' element={ <AdminRoute>  <ModifierCategoriePage/>   </AdminRoute>  } />
+                   <Route path='/approvisionner/:id' element={<ApprovisionnerPage/> }/>
+                   <Route path='/ajouterPerte/:id' element={  <AjouterPertePage/> }/>
+                   <Route path='/modifierProduit/:id' element={ <ModifierProduitPage/> }/>
+                   <Route path='/ajouterProduit' element={ <AjouterProduitPage/>   }/>
+                   <Route path='/ajouterCategorie' element={<AjouterCategoriePage/>  } />
+                   <Route path='/modifierCategorie/:id' element={ <ModifierCategoriePage/>  } />
           
 
        
@@ -63,6 +64,7 @@ const RoutingPage = () => {
        
         <Route path='/recommandation' element={<ProtectRoute><RecommandationPage/></ProtectRoute>} />
         <Route path='/unauthorized' element={<ProtectRoute><UnAuthorizedPage/></ProtectRoute>} />
+       
       </Routes>
   )
 }

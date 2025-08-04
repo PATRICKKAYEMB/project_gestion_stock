@@ -25,10 +25,7 @@ const GridView = ({ name,categorie,prix,quantite,date_ajout,date_expiration,id,i
                 <img src={`${BASEUrl}${image}`} className='w-full h-[160px] bg-amber-600 rounded-md' />
                
                 <h3 className='text-lg text-white  mt-3'>{name}</h3>
-                <div className='flex items-center justify-between '>
-                    <h3 className='text-gray-300 '>Categorie:</h3>
-                    <h3 className='text-white font-semibold'>{categorie} </h3>
-                </div>
+               
                 <div className='flex items-center justify-between '>
                     <h3 className='text-gray-300 '>Prix:</h3>
                     <h3 className='text-white font-semibold'>{prix} </h3>

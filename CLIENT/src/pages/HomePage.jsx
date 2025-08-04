@@ -1,27 +1,30 @@
 import React, { useRef } from 'react'
-import image1 from "../assets/ordi dell.jpeg" // ✅ Sans espace dans le nom
-import { Link } from 'react-router-dom'
+import image1 from "../assets/hp chargeur.jpg"
+import { Link, useNavigate } from 'react-router-dom'
 import Categorie from '../components/Categorie'
 import Produit from '../components/Produit'
 import { useQuery } from "@tanstack/react-query"
 import { get_categorie } from '../api/categorieApi'
 import { get_produits } from '../api/ProduitApi'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowBigRight, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const HomePage = () => {
-  // 📦 Requête pour les catégories
+  //  Requête pour les catégories
   const { data: categories = [], isLoading: loadingCat, isError: errorCat } = useQuery({
     queryKey: ["categorie"],
     queryFn: get_categorie
   })
 
-  // 📦 Requête pour les produits
+  //  Requête pour les produits
   const { data: produits = [], isLoading: loadingProd, isError: errorProd } = useQuery({
     queryKey: ["produits"],
     queryFn: get_produits
   })
 
-  // 🎯 Référence scrollable des catégories
+  const navigate =useNavigate()
+
+  const Produits =produits.slice(0,8)
+ 
   const scrollRef = useRef(null)
 
   const scrollLeft = () => {
@@ -34,8 +37,8 @@ const HomePage = () => {
 
   return (
     <div>
-      {/* 🎉 Hero Section */}
-      <section className="bg-gradient-to-br from-orange-100 via-red-100 to-yellow-50 py-20">
+     
+      <section className="bg-gradient-to-br bg-white py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
             <div className="space-y-6">
@@ -49,28 +52,12 @@ const HomePage = () => {
 
               <div className="flex items-center space-x-4">
                 <Link
-                  to="/boutique"
-                  className="bg-white px-6 py-3 text-base rounded-lg text-gray-900 font-medium hover:shadow-md transition-all duration-300"
+                  to="/produit"
+                  className="bg-orange-900 px-6 py-3 text-base rounded-lg hover:bg-black  text-white font-medium hover:shadow-md transition-all duration-300"
                 >
                   Acheter maitenant
                 </Link>
-                <div className="flex items-center space-x-4">
-                  <img
-                    src="https://images.pexels.com/photos/1408221/pexels-photo-1408221.jpeg"
-                    alt="Customer"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <img
-                    src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg"
-                    alt="Customer"
-                    className="w-8 h-8 rounded-full -ml-2"
-                  />
-                  <img
-                    src="https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg"
-                    alt="Customer"
-                    className="w-8 h-8 rounded-full -ml-2"
-                  />
-                </div>
+              
               </div>
 
               <div className="flex items-center space-x-4">
@@ -82,28 +69,22 @@ const HomePage = () => {
               <img
                 src={image1}
                 alt="Boîtier Samsung"
-                className="w-full max-w-md mx-auto h-auto object-cover"
+                className="w-full max-w-md mx-auto h-[350px] object-cover"
               />
-              <div className="absolute top-4 right-4 w-20 h-20">
-                <img
-                  src="https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg"
-                  alt="Smartwatch"
-                  className="w-full h-full object-cover rounded-lg shadow-lg"
-                />
-              </div>
+            
             </div>
           </div>
         </div>
       </section>
 
-      {/* 📦 Catégories */}
-      <section className='w-full px-[7%] mt-10'>
-        <h3 className='text-center font-medium text-indigo-900 text-3xl mb-3'>
+     
+      <section className='w-full px-[7%]  bg-orange-900 pt-4 pb-7 ' >
+        <h3 className='text-center font-medium text-white text-3xl mb-3'>
           Catégories
         </h3>
-        <p className='text-center mb-5'>Explorez nos différentes catégories de produits.</p>
+        <p className='text-center text-white mb-5'>Explorez nos différentes catégories de produits.</p>
 
-        {/* Loading / error */}
+      
         {loadingCat ? (
           <p className='text-center text-gray-500'>Chargement des catégories...</p>
         ) : errorCat ? (
@@ -142,10 +123,11 @@ const HomePage = () => {
         )}
       </section>
 
-      {/* 🛒 Produits */}
-      <section className='w-full px-[7%] mt-14'>
-        <h3 className='text-center font-medium text-indigo-900 text-3xl mb-3'>Produits</h3>
-        <p className='text-center mb-6'>Nos derniers produits en stock</p>
+     
+      <section className='w-full px-[7%] bg-[#F1F1F1] pt-2 relative pb-8'>
+        <h3 className='text-center font-medium mt-6 text-indigo-900 text-3xl mb-3'>Produits</h3>
+        <p className='text-center mb-8 '>Nos derniers produits recents</p>
+        <span className='float-right absolute top-[95px] right-[100px] px-2 py-1 bg-orange-900 hover:bg-black :duration-2  flex text-white cursor-pointer' onClick={()=>navigate("/produit")}>voir Tout <ArrowBigRight className='ml-2'/></span>
 
         {loadingProd ? (
           <p className='text-center text-gray-500'>Chargement des produits...</p>
@@ -153,7 +135,7 @@ const HomePage = () => {
           <p className='text-center text-red-500'>Erreur lors du chargement des produits.</p>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-            {produits.map((produit) => (
+            {Produits.map((produit) => (
               <div
                 key={produit.id}
                 className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow"

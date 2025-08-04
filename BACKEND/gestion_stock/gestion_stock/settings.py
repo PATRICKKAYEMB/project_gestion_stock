@@ -159,3 +159,9 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+from decouple import config
+
+CINETPAY_APIKEY = config("APIKEY")
+CINETPAY_SITE_ID = config("SITE_ID")
+CINETPAY_SECRET_KEY = config("SECRET_KEY")  # Pour les vérifications de sécurité

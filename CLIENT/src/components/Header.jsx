@@ -5,6 +5,8 @@ import { AppContext } from '../Context/AppContext';
 
 
 const Header = () => {
+
+ 
     const [isMenuOpen,setIsMenuOpen]=useState(false)
         const navigate= useNavigate()
     function handleCartClick(){
@@ -19,10 +21,10 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">Tv</span>
+            <div className="w-8 h-8 bg-orange-900 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">VT</span>
             </div>
-            <span className="text-lg font-bold text-gray-900">TAG<span className="text-[12px] font-bold text-orange-600">Vision</span></span>
+            <span className="text-lg font-bold text-gray-900">VISION<span className="text-[12px] font-bold text-orange-900">Tag</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -30,15 +32,12 @@ const Header = () => {
             <Link to="/" className="text-gray-900 hover:text-blue-600 font-medium transition-colors">
               Home
             </Link>
-            <Link to="/categorie" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-              categorie
-            </Link>
+          
             <Link to="/produit" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               produits
             </Link>
            
             
-           
           </nav>
 
           {/* Right side icons */}
@@ -59,7 +58,7 @@ const Header = () => {
             </button>
             
             <button onClick={()=>navigate("/login")} className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-              <User className="w-8 h-8" />
+              <User className="w-8 h-8" /> 
             </button>
 
             {/* Mobile menu button */}

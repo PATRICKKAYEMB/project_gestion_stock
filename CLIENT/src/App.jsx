@@ -1,4 +1,6 @@
 import Navigation from "./Navigation/Navigation"
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
@@ -6,7 +8,9 @@ function App() {
 
   return (
    <>
-   <Navigation/>
+    <Navigation/>
+    <ToastContainer />
+    
    </>
   )
 }

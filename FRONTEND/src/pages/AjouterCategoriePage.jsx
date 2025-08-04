@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 import { ajouter_categorie } from '@/api/apiCategorie'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 const AjouterCategoriePage = () => {
 
 const navigate= useNavigate()
@@ -17,7 +18,7 @@ const {register,handleSubmit}= useForm()
         mutationFn:ajouter_categorie,
 
         onSuccess:()=>{
-
+            toast.success("categorie ajouter")
             navigate("/produits")
         }
     })

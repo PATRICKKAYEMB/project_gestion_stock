@@ -44,7 +44,7 @@ const PanierPage = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: venteProduit,
     onSuccess: (data) => {
-      toast.success(data.message || "Vente réussie")
+      toast.success ( "Vente réussie")
       setPanier([])
       setClient("")
     },
@@ -142,11 +142,11 @@ const PanierPage = () => {
           {panier.length > 0 && (
             <div className=' w-[400px] py-3 border-2 px-4 bg-white rounded-2xl'>
 
-              <h3 className='text-center text-2xl mt-5'>formulaire de vente</h3>
+              <h3 className='text-center text-2xl mt-3'>formulaire de vente</h3>
              
 
 
-             <div className='mt-8'>
+             <div className='mt-2'>
                     <div className='mb-2'>
                         <h3> Non du client:</h3>
                        
@@ -158,7 +158,7 @@ const PanierPage = () => {
                 placeholder='Nom du client'
                 value={client}
                 onChange={(e) => setClient(e.target.value)}
-                className='p-2 border rounded w-full mb-4'
+                className='p-2 border rounded w-full mb-2'
                   />
 
              </div>
@@ -175,16 +175,16 @@ const PanierPage = () => {
                 placeholder='Date de vente'
                 value={dateVente}
                 onChange={(e) => setDateVente(e.target.value)}
-                className='p-2 border rounded w-full mb-4'/>
+                className='p-2 border rounded w-full '/>
 
               </div>
              
               <br />
-               <h3 className='text-2xl float-right font-bold mb-4'>Total : {total} FC</h3>
+               <h3 className='text-2xl float-right font-bold mb-1'>Total : {total} FC</h3>
               <button
                 onClick={handleVente}
                 disabled={isLoading}
-                className='bg-blue-600 text-white px-6 py-2 text-xl mt-10 w-full rounded'
+                className='bg-orange-900 hover:bg-black duration-200 hover:cursor-pointer text-white px-6 py-2 text-xl mt-2 w-full rounded'
               >
                 {isLoading ? "Traitement..." : "Vendre"}
               </button>

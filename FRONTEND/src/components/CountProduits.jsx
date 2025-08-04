@@ -14,10 +14,10 @@ const CountProduits = () => {
  
   return (
 
-    <div className='w-full bg-blue-900 shadow-md rounded-md h-[110px] items-center justify-center flex flex-col '>
+    <div className='w-full bg-white shadow-md shadow-gray-400  rounded-md h-[110px] items-center justify-center flex flex-col '>
 
-        <h3 className='text-white text-2xl mb-3'>{count_produit?.count}</h3>
-        <p className='text-white text-lg'>Produits</p>
+        <h3 className='text-black text-2xl mb-3'>{count_produit?.count}</h3>
+        <p className='text-black text-lg'>Produits</p>
     </div>
   )
 }

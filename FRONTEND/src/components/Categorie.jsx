@@ -24,13 +24,8 @@ const Categorie = ({ id:categorieId, name }) => {
 function onSubmit(id) {
 
 
-  if (!user || user.role !== "admin"){
-    alert("seul l'admin a le droit de supprimer une categorie")
-  }
-
-  else{
-
-    if(window.confirm("Voulez-vous vraiment supprimer cette categorie ?")){
+  if (user){
+         if(window.confirm("Voulez-vous vraiment supprimer cette categorie ?")){
          mutation.mutate({id})
   }
 
@@ -39,12 +34,10 @@ function onSubmit(id) {
 }
 
 function verificationModification(id) {
-  if (!user || user.role !== "admin"){
-    alert("seul l'admin a le droit de modifier une categorie")
-  }
-  else{
+  if (user){
     navigate(`/modifierCategorie/${id}/`)
   }
+
 }
   return (
     <tr className="border-b ">
@@ -53,7 +46,7 @@ function verificationModification(id) {
       <td className="px-4 py-2 text-center items-center justify-center flex gap-6">
 
         <Trash2 className="w-5 h-5 text-red-600 hover:text-red-800 cursor-pointer border-2  " onClick={()=>onSubmit(categorieId)} />
-        <Pencil className="w-5 h-5 text-blue-600 hover:text-blue-800 cursor-pointer" onClick={()=>verificationModification(id)}/>
+        <Pencil className="w-5 h-5 text-blue-600 hover:text-blue-800 cursor-pointer" onClick={()=>verificationModification(categorieId)}/>
       
       </td>
     </tr>

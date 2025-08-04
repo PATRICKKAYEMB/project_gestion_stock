@@ -204,12 +204,12 @@ const handleDownload = async () => {
                      
 
                       <td className="text-start px-6">{vt.produit_nom}</td>
-                      <td className="text-start hidden md:table-cell px-6">{vt.prix_produit}</td>
+                      <td className="text-start hidden md:table-cell px-6">{vt.prix_produit}fc</td>
 
 
                       <td className="text-start pl-12">{vt.quantite}</td>
                       <td className="text-start hidden md:table-cell px-6">{formatDateTime(vt.date_vente)}</td>
-                      <td className="text-start px-6">{vt.total}</td>
+                      <td className="text-start px-6">{vt.total} fc</td>
                     </tr>
                   ))}
                 </tbody>

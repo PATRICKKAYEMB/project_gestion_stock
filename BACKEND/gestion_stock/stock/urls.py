@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_product_recommandations_api,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (get_product_recommandations_api,initier_paiement_mobile_money,paiement_callback,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,get_produits,historiqueVente,AchatProduit,ReApprovisionnerProduit,perteProduit,notification,countNotification)
 
 
@@ -40,7 +40,7 @@ urlpatterns = [
     path("historiqueAchat/", historiqueAchat, name="historiqueAchat"),
     path("historiquePerte/", historiquePerte, name="historiquePerte"),
 
-      path("achatVente/", AchatProduit, name="venteProduit"),   
+      path("venteProduit/", AchatProduit, name="venteProduit"),   
     path("reapprovisionner/<int:id_prod>/", ReApprovisionnerProduit, name="achatProduit"),
     path("perteProduit/<int:id_prod>/", perteProduit, name="perteProduit"),
 
@@ -51,4 +51,8 @@ urlpatterns = [
     path("download_story_ventes/", download_story_vente, name="download-story-ventes"),
     path("get_product_recommandations/<int:product_id>/", get_product_recommandations_api, name="get-product-recommendations"),
   
+
+ path('payement/', initier_paiement_mobile_money, name='initier_paiement'),
+    path('callback/',paiement_callback, name='paiement_callback'),
+
 ]

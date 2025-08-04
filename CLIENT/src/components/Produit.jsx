@@ -6,7 +6,7 @@ const Produit = ({ produit }) => {
   const navigate= useNavigate()
  
   return (
-    <div className='p-4 flex flex-col items-center text-center' onClick={()=>navigate(`/details/${produit.id}/`)}>
+    <div className='p-4 flex flex-col items-center text-center cursor-pointer' onClick={()=>navigate(`/details/${produit.id}/`)}>
       <img
         src={`${BASEIMAGEUrl}${produit.image}`}
         alt={produit.name}

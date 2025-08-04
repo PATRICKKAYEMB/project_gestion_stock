@@ -12,11 +12,13 @@ export const creationCompte = async (data)=>{
     }
 }
 
-export const connexion = async (data) =>{
+export const connexion = async (formData) =>{
     try {
-        const response = await securedApi.post("token/",data)
+        const response = await securedApi.post("token/",formData)
+
+        console.log("salut",response.data)
         return response.data
-   
+     
     } catch (error) {
         console.log("voici l'erreur dans connexion",error)
         

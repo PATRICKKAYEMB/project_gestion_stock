@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { get_produits } from '../api/ProduitApi'
 import { get_categorie } from '../api/categorieApi'
 
+
 const ProduitsPage = () => {
   const [recherche, setRecherche] = useState('')
   const [categorie, setCategorie] = useState("")
@@ -18,6 +19,7 @@ const ProduitsPage = () => {
     queryKey: ["categories"],
     queryFn: get_categorie
   })
+  
 
   const DataCategorie = categories || []
   const DataProduits = produits || []
@@ -56,6 +58,8 @@ const ProduitsPage = () => {
       </aside>
 
       {/* right side */}
+
+      {}
       <section className='flex-1 p-8'>
         <div className='flex items-center gap-3 mb-6 w-full max-w-md mx-auto'>
           <input

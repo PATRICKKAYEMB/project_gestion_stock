@@ -22,7 +22,7 @@ import Sidebar from '@/components/Sidebar'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { LayoutGrid, List } from 'lucide-react'
 import SideBarMobile from '@/components/SideBarMobile'
-import useAuth from '@/hooks/useAuth'
+
 
 
 
@@ -34,7 +34,7 @@ const ProduitGridPage = () => {
     const [sort,setSort] = useState("")
     const [search,setSearch]= useState('')
 
-    const {user}=useAuth()
+ 
 
     const {data:categoriesData} = useQuery({
         queryKey:["categorie_list",categorie,sort],
@@ -52,12 +52,17 @@ const ProduitGridPage = () => {
 
 
     function verificationAjout(){
-        if (!user || user.role !== "admin"){
+
+         navigate("/ajouterProduit")
+
+         {/**    
+             if (!user || user.role !== "admin"){
             alert("seul l'admin a le droit d'ajouter un produit")
-        }
-        else{
-            navigate("/ajouterProduit")
-        }
+                 }
+            
+            */}
+       
+       
     }
     const statusColors = {
         red: "bg-red-500",
@@ -176,11 +181,11 @@ const ProduitGridPage = () => {
                                          { voir_produit.map((prod,id) => (
                                              <GridView  name={prod.name}
                                                         prix={prod.prix}
-                                                        categorie={prod.categorie}
+                                                      
                                                         quantite={prod.quantite}
                                                         status={prod.status}
                                                         date_ajout={prod.date_ajout}
-                                                        date_expiration={prod.date_expiration}
+                                                     
                                                         id={prod.id}
                                                         image={prod.image}
                                                

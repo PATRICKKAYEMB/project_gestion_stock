@@ -35,12 +35,16 @@ const DetailProduit = () => {
     );
 
      function verificationModification(detail_produit) {
-            if (!user || user.role !== "admin") {
+
+       navigate(`/modifierProduit/${detail_produit.id}/`);
+       {/***
+         if (!user || user.role !== "admin") {
               alert("Seul l'admin a le droit de modifier un produit");
             }
-            else {
-              navigate(`/modifierProduit/${detail_produit.id}/`);
-            }
+        
+        */}
+           
+            
       }
       const statusColors = {
         red: "bg-red-500",
@@ -53,27 +57,28 @@ const DetailProduit = () => {
  
       function onSubmit(id) {
 
-        if (!user || user.role !== "admin") {
-          alert("Seul l'admin a le droit de supprimer un produit");
-        }
-
-        else{
-           if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
+         if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
           mutate.mutate({ id });
-        }
 
-        }
-       
-      }
+            }
 
-      function verificationReaprovissionnement(detail_produit) {
-        if (!user || user.role !== "admin") {
-          alert("Seul l'admin a le droit d'approvisionner un produit");
-        } else {
-          navigate(`/approvisionner/${detail_produit.id}/`);
-        }
+          }
+
+        {/** 
+           if (!user || user.role !== "admin") {
+          alert("Seul l'admin a le droit de supprimer un produit");
         
-      }
+          
+          */}
+
+       
+
+        
+
+        
+       
+    
+
       
    
   return (
@@ -96,13 +101,12 @@ const DetailProduit = () => {
                                 <button className='flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded shadow' onClick={() => onSubmit(id)}>
                                 <FaTrash /> Supprimer
                                 </button>
-                                 <button className='px-2 py-2 bg-red-500 shadow-md rounded-md' onClick={()=>(navigate(`/ajouterPerte/${detail_produit.id}/`))}>ajouter perte</button>
+                                
 
                            </div>
                            <div className='flex gap-2'>
   
 
-                                <button className='px-2 py-2 bg-green-500 shadow-md rounded-md' onClick={()=>verificationReaprovissionnement(detail_produit.id)}>approvisionner</button>
                                 <button  className='px-2 py-2 bg-yellow-500 shadow-md rounded-md' onClick={()=>verificationModification(detail_produit.id)}>modification</button>
                             
                            </div>
@@ -117,10 +121,7 @@ const DetailProduit = () => {
                             <span className='text-white text-lg font-semibold'>{detail_produit.name}</span>
                             
                         </div>
-                        <div className='flex items-center justify-between'> 
-                            <h3 className='text-white text-lg'>Categorie:</h3> 
-                            <span className='text-white text-lg  font-semibold'>{detail_produit.categorie}</span>
-                        </div>
+                       
                         <div className='flex items-center justify-between'> 
                             <h3 className='text-white text-lg '>prix:</h3> 
                             <span className='text-white text-lg  font-semibold'>{detail_produit.prix}</span>

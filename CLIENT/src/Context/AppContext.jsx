@@ -2,30 +2,34 @@ import { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom"
 
 
+
 export const AppContext = createContext();
 
 export const ContextProvider = ({ children }) => {
   const [panier, setPanier] = useState([]);
   const [user,setUser] = useState(null)
   const navigate= useNavigate()
+  
 
     function handleSuccess(data){
-      const { access, refresh } = data.token 
+      const { access, refresh } = data
             localStorage.setItem("access",access)
             localStorage.setItem("refresh",refresh)
-            navigate("/achat")
 
             
     } 
 
 
-    function handleUser(data){
+   function handleUser(data) {
+  if (data?.user) {
+    const { username, role } = data.user;
+    setUser({ name: username, role });  
 
-       if (data?.user) {
-      const { name, role } = data.user;
-      setUser({ name, role });
+    if (role === "client") {
+      navigate("/payement");
     }
-    }
+  }
+}
 
 
   function ajouterPanier(produit) {
@@ -40,6 +44,7 @@ export const ContextProvider = ({ children }) => {
       setPanier(nouveauPanier);
     } else {
       setPanier([...panier, { ...produit, quantite: 1 }]);
+     
     }
   }
 

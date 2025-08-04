@@ -4,11 +4,13 @@ import { api } from "./api"
 
 
 export const get_produits =async (recherche,categorie)=>{
+
     try {
         const params={}
 
         if (recherche){
             params.recherche= recherche
+            
         }
         if(categorie){
             params.categorie = categorie
@@ -44,6 +46,29 @@ export const recommandation_produit = async (id) => {
 ;
   } catch (error) {
     console.error("Erreur dans recommandation_produit:", error);
-    return []; // ✅ Retourne un tableau vide en cas d'erreur
+    return []; 
   }
 };
+
+
+export const get_Categorie =async (recherche,idCat)=>{
+
+    try {
+        const params={}
+
+        if (recherche){
+            params.recherche= recherche
+            
+        }
+        if(idCat){
+            params.categorie = idCat
+        }
+        
+        const response = await api.get("get_produit/",{params})
+
+        return response.data
+        
+    } catch (error) {
+        console.log("voici l'erreur dans get produits ",error)
+    }
+}

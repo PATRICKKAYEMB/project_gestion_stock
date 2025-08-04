@@ -2,7 +2,11 @@ from django.shortcuts import render,get_object_or_404
 from django.db.models.functions import TruncDay
 from django.contrib.auth import get_user_model
 from django import views
+import traceback
+
 import uuid
+from cinetpay_sdk.s_d_k import Cinetpay
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import HttpResponse
@@ -49,7 +53,7 @@ def get_user(request):
 ### GESTION CATECORIE 
     
 
-@api_view(["POST","DELETE","PUT"])
+@api_view(["GET","POST","DELETE","PUT"])
 @permission_classes([IsAuthenticated])
 
 def categorie(request,id_cat=None):
@@ -70,9 +74,7 @@ def categorie(request,id_cat=None):
 
         user= request.user.role
 
-        if user != "admin":
-            return Response({"message":"vous n'avez pas les droits pour créer une catégorie"}, status=status.HTTP_403_FORBIDDEN)
-
+       
         serializer =CategorieSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -87,18 +89,14 @@ def categorie(request,id_cat=None):
     elif request.method == "DELETE":
 
         user= request.user.role
-        if user != "admin":
-            return Response({"message":"vous n'avez pas les droits pour supprimer une catégorie"}, status=status.HTTP_403_FORBIDDEN)
-        
+      
         categorie= get_object_or_404(Categorie,id=id_cat)
         categorie.delete()
         return Response({"message": "produit supprimé"}, status=status.HTTP_204_NO_CONTENT)
     
     elif request.method == "PUT":
         user= request.user.role
-        if user != "admin":
-            return Response({"message":"vous n'avez pas les droits pour modifier une catégorie"}, status=status.HTTP_403_FORBIDDEN)
-
+       
         categorie=get_object_or_404(Categorie,id=id_cat)
 
         serializer=CategorieSerializer(instance=categorie,data=request.data)
@@ -253,12 +251,16 @@ def get_produits(request,id_prod=None):
     
     categorie= request.query_params.get("categorie")
     recherche = request.query_params.get("recherche")
+    print(categorie,"salut")
+    print("cest la recherche",recherche)
 
     produits= Produit.objects.all()
     if categorie:
-        produits.filter(categorie__id=categorie)
+        produits=produits.filter(categorie__id=categorie)
+      
     if recherche:
-        produits.filter(name__icontains=recherche)
+        produits=produits.filter(name__icontains=recherche)
+        
 
     serializer= ProduitSerializer(produits,many=True)
 
@@ -767,84 +769,87 @@ def AchatProduit(request):
 
 # donc mobile money 
 
+
+
 @api_view(["POST"])
 def initier_paiement_mobile_money(request):
-    montant = request.data.get("montant")
-    numero = request.data.get("numero")
-    client_name = request.data.get("client")
-    produits = request.data.get("produits", [])
-    date_vente = request.data.get("date_vente")
+    try:
+        print("---- Données reçues ----")
+        print(request.data)
 
-    if not produits or not client_name:
-        return Response({"message": "Client ou produits manquants"}, status=400)
+        montant = request.data.get("montant")
+        numero = request.data.get("numero")  # si tu le passes plus tard
+        client_name = request.data.get("client")
+        produits = request.data.get("produits", [])
+        date_vente = request.data.get("date_vente")
 
-    transaction_id = str(uuid.uuid4())
+        if not produits or not client_name:
+            return Response({"message": "Client ou produits manquants"}, status=400)
 
-    # Enregistrer les infos provisoirement dans un "panier" (à toi de créer ce modèle si tu veux)
-    # Ou tu peux directement les passer dans le callback comme métadonnées (si l'API supporte ça)
+        transaction_id = str(uuid.uuid4())
 
-    headers = {
-        "Authorization": "Bearer VOTRE_CLE_SECRETE",
-        "Content-Type": "application/json",
-    }
+      
+        print("Initialisation Cinetpay...")
+        client = Cinetpay(settings.CINETPAY_APIKEY, settings.CINETPAY_SITE_ID)
 
-    payload = {
-        "amount": montant,
-        "phone_number": numero,
-        "reference": transaction_id,
-        "currency": "CDF",
-        "callback_url": f"https://votre-backend.com/api/paiement/callback/"  # à adapter
-    }
+        payload = {
+            "amount": montant,
+            "currency": "CDF",
+            "transaction_id": transaction_id,
+            "description": "Paiement test via LocalTunnel",
+            "return_url": "http://localhost:3000/retour",
+            "notify_url": "https://light-oranges-sit.loca.lt/api/callback/",
+            "customer_name": client_name,
+            "customer_surname": "TEST"
+        }
 
-    response = requests.post("https://sandbox.api-entreprise.com/paiement", json=payload, headers=headers)
+        response = client.PaymentInitialization(payload)
+        print(" Réponse Cinetpay:", response)
 
-    if response.status_code == 200:
-        data = response.json()
+      
 
-        # Crée le paiement avec statut en attente
-        client_obj, _ = Client.objects.get_or_create(name=client_name)
-        Paiement.objects.create(
-            client=client_obj,
-            montant=montant,
-            mode_paiement="mobile_money",
-            statut="en_attente",
-            transaction_id=transaction_id
-        )
+        if response.get("code") == "201":
+            return Response({
+                "status": "en_attente",
+                "redirect_url": response["data"]["payment_url"],
+                "transaction_id": transaction_id
+            })
+        else:
+            return Response({"message": "Erreur côté Cinetpay", "detail": response}, status=400)
 
-        # Astuce : tu peux stocker les produits et quantités en session, ou dans une table "CommandeTemporaire"
-        return Response({"status": "en_attente", "transaction_id": transaction_id})
-    else:
-        return Response({"message": "Erreur lors du paiement", "detail": response.text}, status=400)
-    
+    except Exception as e:
+        print(" ERREUR SERVEUR :", str(e))
+        traceback.print_exc()
+        return Response({"message": "Erreur serveur", "detail": str(e)}, status=500)
+
+
 @api_view(["POST"])
-@permission_classes([AllowAny])  # L'API externe n'a pas besoin d'authentification
+@permission_classes([AllowAny])
 def paiement_callback(request):
-    transaction_id = request.data.get("reference")
-    statut_api = request.data.get("status")  # par exemple: "SUCCESS", "FAILED"
-    produits = request.data.get("produits", [])  # À condition que l'API te renvoie ça
+    transaction_id = request.data.get("transaction_id")
+    statut_api = request.data.get("status")  
 
     try:
         paiement = Paiement.objects.get(transaction_id=transaction_id)
 
-        if statut_api == "SUCCESS":
+        if statut_api == "ACCEPTED":
             paiement.statut = "valide"
             paiement.save()
 
-            # Récupérer client et enregistrer la vente réelle
             client_obj = paiement.client
-            total_global = 0
 
-            for item in produits:
-                prod_id = item.get("id")
-                quantite = item.get("quantite")
+            vente_temp = VenteTemporaire.objects.filter(transaction_id=transaction_id)
+            if not vente_temp.exists():
+                return Response({"message": "Aucun produit associé à cette vente."}, status=400)
 
-                produit = get_object_or_404(Produit, id=prod_id)
+            for item in vente_temp:
+                produit = item.produit
+                quantite = item.quantite
 
                 if produit.quantite < quantite:
-                    return Response({"message": f"Stock insuffisant pour {produit.name}"}, status=400)
+                    return Response({"message": f"Stock insuffisant pour {produit.nom}"}, status=400)
 
                 total = produit.prix * quantite
-                total_global += total
 
                 VenteProduit.objects.create(
                     produit=produit,
@@ -857,13 +862,15 @@ def paiement_callback(request):
                 produit.quantite -= quantite
                 produit.save()
 
-            return Response({"message": "Paiement confirmé, vente enregistrée."}, status=200)
+            vente_temp.delete()
+
+            return Response({"message": "Paiement confirmé et vente enregistrée."}, status=200)
 
         else:
             paiement.statut = "echoue"
             paiement.save()
-            return Response({"message": "Paiement échoué."}, status=200)
+            return Response({"message": "Paiement refusé."}, status=200)
 
     except Paiement.DoesNotExist:
-        return Response({"message": "Transaction non reconnue"}, status=404)
+        return Response({"message": "Transaction inconnue."}, status=404)
 
