@@ -24,7 +24,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-orange-900 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">VT</span>
             </div>
-            <span className="text-lg font-bold text-gray-900">VISION<span className="text-[12px] font-bold text-orange-900">Tag</span></span>
+            
           </Link>
 
           {/* Desktop Navigation */}

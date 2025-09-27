@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import GridView from '../components/GridView'
 
 import { BiAbacus, BiCategory, BiFilter, BiFilterAlt, BiSearch } from 'react-icons/bi'
@@ -22,6 +22,8 @@ import Sidebar from '@/components/Sidebar'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { LayoutGrid, List } from 'lucide-react'
 import SideBarMobile from '@/components/SideBarMobile'
+import { AppContext } from '@/context/AppContext'
+import {useAuth } from '@/hooks/useAuth'
 
 
 
@@ -50,19 +52,15 @@ const ProduitGridPage = () => {
         }))
     })
 
-
+const {user}= useAuth()
     function verificationAjout(){
-
-         navigate("/ajouterProduit")
-
-         {/**    
              if (!user || user.role !== "admin"){
             alert("seul l'admin a le droit d'ajouter un produit")
                  }
-            
-            */}
-       
-       
+            else{
+                navigate("/ajouterProduit")  
+            }
+             
     }
     const statusColors = {
         red: "bg-red-500",
@@ -84,7 +82,7 @@ const ProduitGridPage = () => {
                 <Navbar/>
                 <SideBarMobile/>
                     <div className='px-8 pt-6'>
-                    <div  className='float-right bg-blue-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
+                    <div  className='float-right bg-orange-900 px-2 py-1 md:px-4 md:py-2 shadow shadow-black rounded-md  hover:bg-black transition-all duration-100 cursor-pointer'>
                         <h3 onClick={verificationAjout} className='text-white text-lg'>ajouter</h3>
                         
                     </div>

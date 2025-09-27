@@ -114,15 +114,22 @@ class VenteProduit(models.Model):
     produit=models.ForeignKey(Produit,related_name="ventes", on_delete=models.CASCADE)
     client=models.ForeignKey(Client, related_name="ventes" , on_delete=models.CASCADE)
     quantite=models.PositiveIntegerField()
+    prixUnitaire = models.PositiveIntegerField(null=True,blank=True) 
     date_vente = models.DateTimeField(default=timezone.now) 
     transaction_id = models.CharField(max_length=100, db_index=True)
     total=models.IntegerField(null=True,blank=True)
     paiement = models.ForeignKey(Paiement, on_delete=models.SET_NULL, null=True, blank=True)
 
+    
+    
 
-    def save(self,*args, **kwargs):
-        self.total= self.produit.prix*self.quantite
-        super().save(*args, **kwargs)
+    def __str__(self):
+         return f"{self.produit.name} - {self.client.name} ({self.quantite} x {self.prixUnitaire})"
+
+
+
+
+
 
     
 

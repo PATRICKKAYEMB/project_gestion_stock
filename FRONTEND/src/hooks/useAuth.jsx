@@ -1,16 +1,12 @@
-import { AppContext } from '@/context/AppContext'
-import React, { useContext } from 'react'
+import { AppContext } from "@/context/AppContext";
+import { useContext } from "react";
 
-const useAuth = () => {
+export const useAuth = () => {
+    const context = useContext(AppContext);
 
-    const context = useContext(AppContext)
-
-    if(!context){
-        throw new Error("useAuth doit être utilisé à l’intérieur de <ContextProvider>")
+    if (!context) {
+        throw new Error("useAuth must be used within an AppContext provider");
     }
-  return context
-   
-  
-}
 
-export default useAuth
+    return context;
+};

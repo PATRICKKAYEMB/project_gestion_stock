@@ -24,6 +24,7 @@ import { AppContext } from '@/context/AppContext'
 import { FaThLarge, FaThList } from 'react-icons/fa'
 import { MdAdd, MdOutlineShoppingCart } from 'react-icons/md'
 import SideBarMobile from '@/components/SideBarMobile'
+import {useAuth} from '@/hooks/useAuth'
 
 
 
@@ -33,21 +34,19 @@ const ProduitsPage = () => {
     const [categorie,setCategorie]= useState("")
     const [sort,setSort] = useState("")
      const [search,setSearch]= useState("")
-
+    const {user} = useAuth()
 
   
 
     function verificationAjout(){
-
-         navigate("/ajouterProduit")
-
-         {/***
              if(!user || user.role !== "admin"){
             alert("seul l'admin a le droit d'ajouter un produit")
+               }
+               
+        else{
+            navigate("/ajouterProduit") 
         }
-            
-            */}
-       
+             
     
     }
 

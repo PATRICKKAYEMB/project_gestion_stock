@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import { BellIcon, Boxes, LogOut, LogOutIcon, LucideLogOut, MenuIcon } from 'lucide-react'
+import { BellIcon, Boxes, DollarSignIcon, LogOut, LogOutIcon, LucideLogOut, MenuIcon, User2Icon } from 'lucide-react'
 import { FaBeer, FaBoxOpen, FaChartBar, FaDesktop, FaMoneyBillWave, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa'
-import { MdDashboard, MdOutlineMoney, MdOutlineShoppingCart, MdReportProblem } from 'react-icons/md';
+import { MdDashboard, MdMoney, MdOutlineMoney, MdOutlineShoppingCart, MdReportProblem } from 'react-icons/md';
 
 import { useNavigate } from 'react-router-dom'; 
 import { NavLink, Navigate} from 'react-router-dom';
 import {ChefHat, Eye, DollarSign, Wallet, PlusCircle, FileText, ArrowDownCircleIcon, ArrowBigDown, ArrowDown, ArrowLeft, ArrowRightIcon, LayoutDashboard } from 'lucide-react';
 import { FaDirections } from 'react-icons/fa';
-import { BiMenu, BiTransfer } from 'react-icons/bi';
+import { BiMenu, BiMoney, BiTransfer } from 'react-icons/bi';
 import { logout } from '@/auth/authService';
 import { TbDashboard, TbDashboardFilled } from 'react-icons/tb';
+import {useAuth} from '@/hooks/useAuth';
 
 
 const Sidebar = ({toggle,setToggle}) => {
@@ -23,6 +24,29 @@ const Sidebar = ({toggle,setToggle}) => {
     const handleLinkClick = () => {
       setToggle(false); 
     };
+    const navigate=useNavigate()
+
+    const {user} =useAuth() 
+
+    function verificationRevenue() {
+      if (!user || user.role !=='admin'){
+       alert("Seul l'admin a le droit de voir le revenue"); 
+           }
+      else{
+              navigate('/revenusProduit')
+        }
+    }
+
+     function verificationUser() {
+      if (!user || user.role !=='admin'){
+       alert("Seul l'admin a le droit de voir les utilisateurs"); 
+           }
+      else{
+              navigate('/users')
+        }
+    }
+
+    
   
  const [toggles,setToggles]= useState(false)
   
@@ -44,6 +68,14 @@ const Sidebar = ({toggle,setToggle}) => {
                  !toggles &&  <span className='text-left'> Dashbord</span>
               }
               </NavLink>
+          </li>
+
+           <li onClick={verificationUser} className="   mt-4  mb-4 flex hover:bg-orange-900 hover:text-white text-left items-center px-4 py-1 text-black cursor-pointer font-bold ">
+                     <User2Icon className='mr-3' size={22}/>
+              {
+                 !toggles &&  <span className='text-left'> utilisateur</span>
+              }
+             
           </li>
 
            <li >
@@ -78,27 +110,42 @@ const Sidebar = ({toggle,setToggle}) => {
             
           </div>
 
+           <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${openMenu === 'transaction' ? "max-h-40" : "max-h-0"}`}>
+            <NavLink to="/historiqueAchat" onClick={handleLinkClick} className="md:pl-[70px] py-2 hover:bg-orange-900 hover:text-white text-black flex items-center  gap-2 ">  <MdOutlineShoppingCart/>  Historique Achat</NavLink>
+          
+            
+          </div>
 
+            
+                     <li >
+                        <NavLink to="/users" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-orange-900 hover:text-white text-left items-center px-4 py-1 text-black font-bold"> <FaChartBar className='mr-3' size={22}/>
+                          {
+                            !toggles &&  <span className='text-left'> Statistique</span>
+                          }
+                          </NavLink>
+                      </li>
+         
 
-        {/***   <li >
-             <NavLink to="/statistique" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-orange-600 hover:text-white text-left items-center px-4 py-1 text-black font-bold"> <FaChartBar className='mr-3' size={22}/>
+              
+           <li onClick={verificationRevenue} className="   mt-4  mb-4 flex hover:bg-orange-900 hover:text-white text-left items-center cursor-pointer px-4 py-1 text-black font-bold"> <DollarSignIcon className='mr-3' size={22}/>
+
               {
-                 !toggles &&  <span className='text-left'> Statistique</span>
+                 !toggles &&  <span className='text-left'> Revenue</span>
               }
-              </NavLink>
+           
           </li>
-        */}
+     
 
         
 
          
-{/**
 
-          <li >
+
+          <li  >
          
 
           
-         <NavLink to="/voirPerte" onClick={handleToggle} className="   mt-4  mb-4 flex text-left items-center px-4 py-1 text-black font-bold hover:bg-orange-600 hover:text-whi">  <MdReportProblem className="mr-3" size={22}/>
+         <NavLink to="/voirPerte" onClick={verificationRevenue} className="   mt-4  mb-4 flex text-left items-center px-4 py-1 text-black font-bold hover:bg-orange-900 hover:text-white">  <MdReportProblem className="mr-3" size={22}/>
           {
              !toggles &&  <span className='text-left'> Perte</span>
           }
@@ -106,7 +153,7 @@ const Sidebar = ({toggle,setToggle}) => {
       
         
           </li>
-   */}
+ 
              
 
 

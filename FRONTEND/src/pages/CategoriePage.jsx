@@ -4,7 +4,7 @@ import Categorie from '@/components/Categorie'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import SideBarMobile from '@/components/SideBarMobile'
-import useAuth from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/useAuth'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -17,9 +17,17 @@ const CategoriePage = () => {
  
    const navigate =useNavigate()
 
+   const {user}= useAuth()
   function verificationAjout(){
+  
+    if (!user || user.role !== 'admin'){
+        alert("Seul l'admin a le droit de supprimer une categorie");
     
-        navigate("/ajouterCategorie")
+    }
+    else{
+       navigate("/ajouterCategorie") 
+    }
+        
     
   }
   

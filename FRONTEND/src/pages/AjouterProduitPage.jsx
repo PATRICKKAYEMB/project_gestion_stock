@@ -177,7 +177,7 @@ const AjouterProduitPage = () => {
 
                     <button
                       type="submit"
-                      className="w-full mt-2 bg-blue-900 text-white py-2 rounded hover:bg-blue-700 transition"
+                      className="w-full mt-2 bg-orange-900 text-white py-2 rounded hover:bg-blue-700 transition"
                     >
                       {
                         mutation.isPending?"en cours...":"Ajouter"

@@ -26,6 +26,7 @@ export const  voir_vente= async ({date_debut,date_fin,sort,categorie} ={}) =>{
 
 export async function venteProduit(payload) {
   try {
+    console.log(payload)
     const response = await api.post("venteProduit/", payload)
     return response.data
   } catch (error) {

@@ -25,6 +25,12 @@ import RecommandationPage from '@/pages/RecommandationPage'
 import ProtectRouteAdmin from '@/auth/ProtectRouteAdmin'
 import UnAuthorizedPage from '@/pages/UnAuthorizedPage'
 import AdminRoute from '@/auth/AdminRoute' 
+import EnregisterUserPage from '@/pages/EnregisterUserPage'
+import ModifierUserPage from '@/pages/ModifierUserPage'
+import UserPage from '@/pages/UserPage'
+import RevenusTotalPage from '@/pages/RevenusTotalPage'
+import RevenusCategoriePage from '@/pages/RevenusCategoriePage'
+import RevenusProduitPage from '@/pages/RevenusProduitPage'
 
 
 const RoutingPage = () => {
@@ -45,6 +51,13 @@ const RoutingPage = () => {
 
        
           {/**        protected routes                         */}
+       <Route path='revenusTotal' element={<ProtectRoute><RevenusTotalPage/></ProtectRoute>}/>
+       <Route path='revenusCategorie' element={<ProtectRoute><RevenusCategoriePage/></ProtectRoute>} />
+       <Route path='revenusProduit' element={<ProtectRoute><RevenusProduitPage/></ProtectRoute>}/>
+
+        <Route path='/users' element={<ProtectRoute><UserPage/></ProtectRoute>}/>
+        <Route path='/enregistreUser' element={<ProtectRoute><EnregisterUserPage/></ProtectRoute>}/>
+        <Route path='/ModifierUser/:id' element={<ProtectRoute><ModifierUserPage/></ProtectRoute>}/>
         
         <Route path='detailProduit/:id' element={<ProtectRoute><DetailProduit/></ProtectRoute>}/>
         <Route path='/produits' element={  <ProtectRoute>  <ProduitsPage/> </ProtectRoute>}/>

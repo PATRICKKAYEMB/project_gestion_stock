@@ -3,6 +3,8 @@ from django.db.models.functions import TruncDay
 from django.contrib.auth import get_user_model
 from django import views
 import traceback
+from django.utils.dateparse import parse_datetime
+from django.utils import timezone
 
 import uuid
 from cinetpay_sdk.s_d_k import Cinetpay
@@ -128,7 +130,51 @@ def get_categories(request,id_cat=None):
 
 # GESTION UTILISATEUR
 
+User = get_user_model()
 
+@api_view(['GET','DELETE','PUT'])
+def users(request, user_id=None):
+    try:
+        if request.method == 'GET':
+            if user_id:  
+                try:
+                    user = User.objects.get(id=user_id)
+                    serializer = UserSerializer(user)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                except User.DoesNotExist:
+                    return Response({"error": "Utilisateur non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+            else:  
+                users = User.objects.all()
+                serializer = UserSerializer(users, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+        elif request.method == 'DELETE':
+            try:
+                user = User.objects.get(id=user_id)
+                user.delete()
+                return Response({"message": "Utilisateur supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)
+            except User.DoesNotExist:
+                return Response({"error": "Utilisateur non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+
+        elif request.method == "PUT":
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return Response({"error": "Utilisateur non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = UserSerializer(user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Utilisateur mis à jour avec succès"}, status=status.HTTP_200_OK)
+            print("❌ Erreurs de validation:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+        
+    
 
 
 
@@ -142,14 +188,13 @@ def creation_compte(request):
     try:
         password = request.data.get("password")
         name = request.data.get("name")
-        email = request.data.get("email")
-        role = request.data.get("role", "client")  # Par défaut 'client'
+        role = request.data.get("role")  # Par défaut 'client'
 
-        if not all([password, name, email]):
+        if not all([password, name]):
             return Response({"error": "Champs requis manquants"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Ajoute username=name
-        user = User.objects.create_user(username=name, email=email, password=password, role=role)
+        user = User.objects.create_user(username=name, password=password, role=role)
 
         # Création du client lié à l'utilisateur
         client = Client.objects.create(user=user, name=name)
@@ -193,7 +238,6 @@ def produit(request,id_prod=None):
         if name:
             produit= produit.filter(name__icontains=name)
        
-    
 
         if sort_by == "recent":
             produit =produit.order_by("-date_ajout")
@@ -425,59 +469,60 @@ def historiquePerte(request):
 
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def AchatProduit(request):
     data = request.data
-    produits = data.get("produits", [])
-    client_name = data.get("client")
-    date_vente = data.get("date_vente")
-
-    if not produits:
-        return Response({"message": "Aucun produit fourni"}, status=400)
+    client_name = data.get('client')
+    date_vente_str = data.get('date_vente')
+    produits_data = data.get('produits', [])
 
     if not client_name:
-        return Response({"message": "Client manquant"}, status=400)
+        return Response({"message": "Le client est obligatoire"}, status=status.HTTP_400_BAD_REQUEST)
 
-    client_obj, _ = Client.objects.get_or_create(name=client_name)
-
-    transaction_id = str(uuid.uuid4())
+    if not date_vente_str:
+        date_vente = timezone.now()
+    else:
+        date_vente = parse_datetime(date_vente_str)
+        if not date_vente:
+            return Response({"message": "Format de date invalide. Utiliser YYYY-MM-DD HH:MM"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         with transaction.atomic():
-            for item in produits:
-                prod_id = item.get("id")
-                quantite = item.get("quantite")
-
-                if not prod_id or not quantite:
-                    return Response({"message": "Données produit invalides"}, status=400)
-
-                produit = get_object_or_404(Produit, id=prod_id)
-
-                if produit.quantite < quantite:
-                    raise ValueError(f"Stock insuffisant pour le produit {produit.name}")
-
-                total = produit.prix * quantite
-
+            client, created = Client.objects.get_or_create(name=client_name)
+            
+            for p_data in produits_data:
+                try:
+                    produit = Produit.objects.get(pk=p_data['id'])
+                except Produit.DoesNotExist:
+                    return Response({"message": f"Produit avec ID {p_data['id']} non trouvé."}, status=status.HTTP_404_NOT_FOUND)
+                
+                # Récupérer la valeur du prix unitaire
+                prix_unitaire_convenu = p_data.get('prix_unitaire')
+                
+                # S'assurer que le prix unitaire a une valeur valide
+                if prix_unitaire_convenu is not None and prix_unitaire_convenu > 0:
+                    prix_a_utiliser = prix_unitaire_convenu
+                else:
+                    prix_a_utiliser = produit.prix
+                
+                # Créer l'objet VenteProduit en utilisant le prix
                 VenteProduit.objects.create(
                     produit=produit,
-                    quantite=quantite,
-                    total=total,
-                    client=client_obj,
+                    client=client,
+                    quantite=p_data.get('quantite', 1),
+                    prixUnitaire=prix_a_utiliser,
                     date_vente=date_vente,
-                    transaction_id=transaction_id  
+                    transaction_id=f"TX-{timezone.now().timestamp()}"
                 )
+                    
+    except Exception as e:
+        return Response({"message": f"Erreur lors de la création d'une vente: {e}"}, status=status.HTTP_400_BAD_REQUEST)
 
-                produit.quantite -= quantite
-                produit.save()
-
-        return Response({"message": "Vente enregistrée avec succès"}, status=201)
-
-    except ValueError as e:
-        return Response({"message": str(e)}, status=400)
- 
-
+    return Response({"message": "Vente réussie"}, status=status.HTTP_201_CREATED)
 
 
 
@@ -705,7 +750,7 @@ def AchatProduit(request):
     data = request.data
     produits = data.get("produits", [])
     client_name = data.get("client")
-    date_vente = data.get("date_vente")
+    date_vente_str = data.get("date_vente")
     mode_paiement = data.get("mode_paiement", "espece")  # par défaut espèces
     montant_total = data.get("montant_total")  # optionnel
 
@@ -713,6 +758,13 @@ def AchatProduit(request):
         return Response({"message": "Aucun produit fourni"}, status=400)
     if not client_name:
         return Response({"message": "Client manquant"}, status=400)
+
+    if not date_vente_str:
+        date_vente = timezone.now()
+    else:
+        date_vente = parse_datetime(date_vente_str)
+        if not date_vente:
+            return Response({"message": "Format de date invalide. Utiliser YYYY-MM-DD HH:MM"}, status=400)
 
     client_obj, _ = Client.objects.get_or_create(name=client_name)
     transaction_id = str(uuid.uuid4())
@@ -724,6 +776,7 @@ def AchatProduit(request):
             for item in produits:
                 prod_id = item.get("id")
                 quantite = item.get("quantite")
+                prix_convenu = item.get("prix_unitaire")  # prix fourni par le frontend
 
                 if not prod_id or not quantite:
                     return Response({"message": "Données produit invalides"}, status=400)
@@ -733,18 +786,26 @@ def AchatProduit(request):
                 if produit.quantite < quantite:
                     raise ValueError(f"Stock insuffisant pour {produit.name}")
 
-                total = produit.prix * quantite
+                # Déterminer le prix à utiliser : prix convenu si fourni, sinon prix initial
+                if prix_convenu is not None and prix_convenu > 0:
+                    prix_utilise = prix_convenu
+                else:
+                    prix_utilise = produit.prix
+
+                total = prix_utilise * quantite
                 total_global += total
 
                 VenteProduit.objects.create(
                     produit=produit,
                     quantite=quantite,
+                    prixUnitaire=prix_utilise,
                     total=total,
                     client=client_obj,
                     date_vente=date_vente,
                     transaction_id=transaction_id
                 )
 
+                # Mettre à jour le stock
                 produit.quantite -= quantite
                 produit.save()
 
@@ -761,6 +822,9 @@ def AchatProduit(request):
 
     except ValueError as e:
         return Response({"message": str(e)}, status=400)
+    except Exception as e:
+        return Response({"message": f"Erreur lors de la création d'une vente: {e}"}, status=400)
+
 
 
 
@@ -873,4 +937,53 @@ def paiement_callback(request):
 
     except Paiement.DoesNotExist:
         return Response({"message": "Transaction inconnue."}, status=404)
+    
+
+@api_view(['GET'])
+def revenus_par_produit(request):
+    dateDebut = request.query_params.get('dateDebut')
+    dateFin =request.query_params.get('dateFin')
+    produit = request.query_params.get('produit')
+
+    if produit:
+        produit = int(produit)
+        ventes = VenteProduit.objects.filter(produit=produit)
+    else:
+        ventes = VenteProduit.objects.all()
+
+    if dateDebut and dateFin:
+        ventes = ventes.filter(date_vente__range=[dateDebut, dateFin])
+
+    total = ventes.aggregate(total=Sum('total'))['total'] or 0
+    return Response({"revenusProduit": total})
+
+
+
+@api_view(['GET'])
+def revenus_par_categorie(request):
+    dateDebut = request.query_params.get('dateDebut')
+    dateFin = request.query_params.get('dateFin')
+    categorie =request.query_params.get('categorie')
+    
+     
+    ventes = VenteProduit.objects.filter(produit__categorie=categorie)
+    if dateDebut and dateFin:
+        ventes = ventes.filter(date_vente__range=[dateDebut, dateFin])
+    
+    total = ventes.aggregate(total=Sum('total'))['total'] or 0
+    return Response({"revenusCategorie": total})
+
+
+@api_view(['GET'])
+def revenus_generaux(request):
+    dateDebut = request.query_params.get('dateDebut')
+    dateFin = request.query_params.get('dateFin')
+
+    ventes = VenteProduit.objects.all()
+    if dateDebut and dateFin:
+        ventes = ventes.filter(date_vente__range=[dateDebut, dateFin])
+    
+    total = ventes.aggregate(total=Sum('total'))['total'] or 0
+    return Response({"revenusTotal": total})
+
 

@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (get_product_recommandations_api,initier_paiement_mobile_money,paiement_callback,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (users,revenus_par_produit, revenus_par_categorie, revenus_generaux,get_product_recommandations_api,initier_paiement_mobile_money,paiement_callback,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,get_produits,historiqueVente,AchatProduit,ReApprovisionnerProduit,perteProduit,notification,countNotification)
 
 
@@ -35,6 +35,11 @@ urlpatterns = [
     path("countAchat/",countAchat, name="countAchat"),
 
 
+    # GESTION USERS
+    path('users/',users),
+     path('users/<int:user_id>/',users),
+
+
         #GESTION HISTORIQUE
     path("historiqueVente/",historiqueVente, name="historiqueVente"),
     path("historiqueAchat/", historiqueAchat, name="historiqueAchat"),
@@ -54,5 +59,14 @@ urlpatterns = [
 
  path('payement/', initier_paiement_mobile_money, name='initier_paiement'),
     path('callback/',paiement_callback, name='paiement_callback'),
+
+
+                          # REVENUES
+                          
+    path('revenusProduit/', revenus_par_produit),
+    path('revenusCategorie/', revenus_par_categorie),
+    path('revenusTotal/', revenus_generaux),
+
+
 
 ]

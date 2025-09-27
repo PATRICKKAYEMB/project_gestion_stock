@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react'
 import { useNavigate, useParams} from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { supprimer_categorie } from '@/api/apiCategorie'
-import useAuth from '@/hooks/useAuth'
+import {useAuth} from '@/hooks/useAuth'
 
 const Categorie = ({ id:categorieId, name }) => {
   const {id}= useParams()
@@ -24,8 +24,11 @@ const Categorie = ({ id:categorieId, name }) => {
 function onSubmit(id) {
 
 
-  if (user){
-         if(window.confirm("Voulez-vous vraiment supprimer cette categorie ?")){
+  if (!user || user.role !== 'admin'){
+      alert("Seul l'admin a le droit de supprimer  une categorie");   
+  }
+  else{
+     if(window.confirm("Voulez-vous vraiment supprimer cette categorie ?")){
          mutation.mutate({id})
   }
 
@@ -34,9 +37,17 @@ function onSubmit(id) {
 }
 
 function verificationModification(id) {
-  if (user){
-    navigate(`/modifierCategorie/${id}/`)
+
+  if (!user || user.role !=='admin') {
+      alert("Seul l'admin a le droit de modifier une categorie"); 
   }
+  else{
+        if (user){
+        navigate(`/modifierCategorie/${id}/`)
+      }
+
+  }
+  
 
 }
   return (
