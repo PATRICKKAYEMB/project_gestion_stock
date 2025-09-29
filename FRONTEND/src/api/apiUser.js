@@ -41,3 +41,13 @@ export const modification_user = async (id,formData)=>{
         console.log("voici l' erreur dans  modification user",error)
     }
 }
+
+
+export const get_user = async (id)=>{
+    try {
+        const response = await api.get(`users/${id}/`)
+        return response.data
+    } catch (error) {
+        console.log("voici l'erreur dans get user ",error)
+    }
+}

@@ -11,7 +11,7 @@ export async function countVente(){
         }
 }
 
-export const  voir_vente= async ({date_debut,date_fin,sort,categorie} ={}) =>{
+export const  voir_vente= async ({date_debut,date_fin,sort,categorie,page} ={}) =>{
     const params = {}
     if ( categorie) params.categorie= categorie
     if (date_debut && date_fin){
@@ -19,6 +19,7 @@ export const  voir_vente= async ({date_debut,date_fin,sort,categorie} ={}) =>{
         params.date_fin =date_fin
     }
     if (sort) params.sort = sort
+    if (page) params.page = page
 
     const response = await api.get("historiqueVente/",{params})
     return response.data

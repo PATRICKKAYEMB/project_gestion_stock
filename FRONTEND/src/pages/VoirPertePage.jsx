@@ -1,9 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Sidebar from '../components/Sidebar'
 import { Download } from 'lucide-react'
 import Navbar from "../components/Navbar"
 import { BiFilterAlt } from 'react-icons/bi'
-
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import { voir_perte } from '@/api/apiPerte'
 import SideBarMobile from '@/components/SideBarMobile'
+import PagePagination from '@/components/PagePagination'
 
 
 const VoirPertePage = () => {
@@ -26,18 +26,33 @@ const VoirPertePage = () => {
   const [sort, setSort] = useState('recent');
   const [filter, setFilter] = useState(false);
   const [categorie, setCategorie] = useState('');
+   const [page, setPage] = useState(1);
+
+   const HistoriquePerPage = 100;
 
   // Récupération des ventes avec les filtres
   const { data: ventesData } = useQuery({
-    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort],
+    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort,page],
     queryFn: () =>
     voir_perte({
         categorie,
         date_debut,
         date_fin,
         sort,
+        page,
       }),
   });
+
+
+  const count = ventesData?.count || 0;
+  const numOfPages = Math.ceil(count / HistoriquePerPage);
+   useEffect(() => {
+      setPage(1);
+    }, [categorie, date_debut, date_fin, sort]);
+  
+    const decreasePageValue = () => setPage((prev) => Math.max(prev - 1, 1));
+    const increasePageValue = () => setPage((prev) => Math.min(prev + 1, numOfPages));
+    const handleSetPage = (pageNumber) => setPage(pageNumber);
 
   // Récupération des catégories
   const { data: categoriesData } = useQuery({
@@ -46,7 +61,7 @@ const VoirPertePage = () => {
   });
 
   const voir_categories = categoriesData || [];
-  const ventes = ventesData || [];
+  const ventes = ventesData?.results || [];
 
 
   return (
@@ -185,6 +200,16 @@ const VoirPertePage = () => {
                 ))}
               </tbody>
             </table>
+               {numOfPages > 1 && (
+                            <PagePagination
+                              numOfPages={numOfPages}
+                              page={page}
+                              handleSetPage={handleSetPage}
+                              decreasePageValue={decreasePageValue}
+                              increasePageValue={increasePageValue}
+                              
+                            />
+                  )}
           </div>
         </div>
       </div>

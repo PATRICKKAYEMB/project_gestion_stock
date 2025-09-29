@@ -3,7 +3,7 @@ from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-from .views import (users,revenus_par_produit, revenus_par_categorie, revenus_generaux,get_product_recommandations_api,initier_paiement_mobile_money,paiement_callback,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
+from .views import (users,revenus_par_produit, revenus_par_categorie, revenus_generaux,produit,creation_compte,get_categories,download_story_vente,countProduit,categorie,ventes_par_jour,categorieVente,countAchat,countPerte,countVente,historiqueAchat,
                     historiquePerte,get_produits,historiqueVente,AchatProduit,ReApprovisionnerProduit,perteProduit,notification,countNotification)
 
 
@@ -54,12 +54,7 @@ urlpatterns = [
     path("categorieVente/",categorieVente,name="categorieVente"),
     path("ventesMensuelles/", ventes_par_jour, name="ventes-par-mois"),
     path("download_story_ventes/", download_story_vente, name="download-story-ventes"),
-    path("get_product_recommandations/<int:product_id>/", get_product_recommandations_api, name="get-product-recommendations"),
-  
-
- path('payement/', initier_paiement_mobile_money, name='initier_paiement'),
-    path('callback/',paiement_callback, name='paiement_callback'),
-
+   
 
                           # REVENUES
                           

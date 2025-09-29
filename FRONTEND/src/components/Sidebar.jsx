@@ -117,13 +117,7 @@ const Sidebar = ({toggle,setToggle}) => {
           </div>
 
             
-                     <li >
-                        <NavLink to="/users" onClick={handleToggle} className="   mt-4  mb-4 flex hover:bg-orange-900 hover:text-white text-left items-center px-4 py-1 text-black font-bold"> <FaChartBar className='mr-3' size={22}/>
-                          {
-                            !toggles &&  <span className='text-left'> Statistique</span>
-                          }
-                          </NavLink>
-                      </li>
+                   
          
 
               

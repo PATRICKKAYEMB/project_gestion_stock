@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Sidebar from '../components/Sidebar'
 import { Download } from 'lucide-react'
 import Navbar from "../components/Navbar"
@@ -21,24 +21,39 @@ import SideBarMobile from '@/components/SideBarMobile'
 
 const HistoriqueAchatPage = () => {
 
+const HistoriquePerPage = 100;
 
   const [date_debut, setDate_debut] = useState('');
   const [date_fin, setDate_fin] = useState('');
   const [sort, setSort] = useState('recent');
   const [filter, setFilter] = useState(false);
   const [categorie, setCategorie] = useState('');
+  const [page, setPage] = useState(1);
 
   // Récupération des ventes avec les filtres
   const { data: ventesData } = useQuery({
-    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort],
+    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort,page],
     queryFn: () =>
       voir_achat({
         categorie: categorie==="all"? "": categorie,
         date_debut,
         date_fin,
         sort,
+        page,
       }),
   });
+
+    const count = ventesData?.count || 0;
+    const numOfPages = Math.ceil(count / HistoriquePerPage);
+  
+    // Remise à zéro de la page lors du changement des filtres
+    useEffect(() => {
+      setPage(1);
+    }, [categorie, date_debut, date_fin, sort]);
+  
+    const decreasePageValue = () => setPage((prev) => Math.max(prev - 1, 1));
+    const increasePageValue = () => setPage((prev) => Math.min(prev + 1, numOfPages));
+    const handleSetPage = (pageNumber) => setPage(pageNumber);
 
   // Récupération des catégories
   const { data: categoriesData } = useQuery({
@@ -47,7 +62,8 @@ const HistoriqueAchatPage = () => {
   });
 
   const voir_categories = categoriesData || [];
-  const ventes = ventesData || [];
+  
+  const ventes = ventesData?.results || [];
 
 
   return (
@@ -181,6 +197,17 @@ const HistoriqueAchatPage = () => {
                 ))}
               </tbody>
             </table>
+            
+                         {numOfPages > 1 && (
+                            <PagePagination
+                              numOfPages={numOfPages}
+                              page={page}
+                              handleSetPage={handleSetPage}
+                              decreasePageValue={decreasePageValue}
+                              increasePageValue={increasePageValue}
+                              
+                            />
+                  )}
           </div>
         </div>
       </div>

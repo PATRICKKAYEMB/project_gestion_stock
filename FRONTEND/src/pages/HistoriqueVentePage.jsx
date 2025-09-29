@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { Download } from 'lucide-react';
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import SideBarMobile from '@/components/SideBarMobile';
+import PagePagination from '@/components/PagePagination';
   	
 const HistoriqueVentePage = () => {
   const [date_debut, setDate_debut] = useState('');
@@ -22,6 +23,10 @@ const HistoriqueVentePage = () => {
   const [filter, setFilter] = useState(false);
   const [categorie, setCategorie] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
+   const [page, setPage] = useState(1);
+
+
+   const HistoriquePerPage = 100;
 
 const handleDownload = async () => {
   try {
@@ -44,17 +49,35 @@ const handleDownload = async () => {
   }
 };
 
+
+
   // Récupération des ventes avec les filtres
   const { data: ventesData } = useQuery({
-    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort],
+    queryKey: ['historiqueVente', categorie, date_debut, date_fin, sort,page],
     queryFn: () =>
       voir_vente({
         categorie: categorie==="all" ? "" : categorie,
         date_debut,
         date_fin,
         sort,
+        page,
       }),
+       keepPreviousData: true,
   });
+
+
+  
+  const count = ventesData?.count || 0;
+  const numOfPages = Math.ceil(count / HistoriquePerPage);
+
+  // Remise à zéro de la page lors du changement des filtres
+  useEffect(() => {
+    setPage(1);
+  }, [categorie, date_debut, date_fin, sort]);
+
+  const decreasePageValue = () => setPage((prev) => Math.max(prev - 1, 1));
+  const increasePageValue = () => setPage((prev) => Math.min(prev + 1, numOfPages));
+  const handleSetPage = (pageNumber) => setPage(pageNumber);
 
   // Récupération des catégories
   const { data: categoriesData } = useQuery({
@@ -63,7 +86,7 @@ const handleDownload = async () => {
   });
 
   const voir_categories = categoriesData || [];
-  const ventes = ventesData || [];
+  const ventes = ventesData?.results || [];
 
  const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
@@ -84,7 +107,7 @@ const handleDownload = async () => {
         <Navbar />
         <SideBarMobile/>
 
-        <div className="w-full flex items-center justify-between md:mt-8 mt-15 px-6 mb-2 py-2">
+        <div className="w-full flex items-center justify-between md:mt-5 mt-5 px-6 mb-2 py-2">
           <h3 className="text-3xl font-bold text-blue-900">Mes Ventes</h3>
 
            
@@ -215,6 +238,17 @@ const handleDownload = async () => {
                 </tbody>
               </table>
             </div>
+
+             {numOfPages > 1 && (
+                <PagePagination
+                  numOfPages={numOfPages}
+                  page={page}
+                  handleSetPage={handleSetPage}
+                  decreasePageValue={decreasePageValue}
+                  increasePageValue={increasePageValue}
+                  
+                />
+      )}
           </div>
         </div>
       </main>

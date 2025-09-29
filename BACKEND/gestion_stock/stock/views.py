@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.db.models.functions import TruncDay
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination
 from django import views
 import traceback
 from django.utils.dateparse import parse_datetime
@@ -42,6 +43,10 @@ from .models import User,PerteProduit,VenteProduit,Produit,Categorie,Approvision
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class HistoriquePagination (PageNumberPagination):
+    page_size = 50
 
 
 @api_view(["GET"])
@@ -166,7 +171,7 @@ def users(request, user_id=None):
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message": "Utilisateur mis à jour avec succès"}, status=status.HTTP_200_OK)
-            print("❌ Erreurs de validation:", serializer.errors)
+            print(" Erreurs de validation:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
@@ -387,10 +392,12 @@ def historiqueVente(request):
         ventes =ventes.order_by("total")
 
     
-    serializer=VenteProduitSerializer(ventes,many=True)
+    paginator = HistoriquePagination()
+    paginated_Historique_vente= paginator.paginate_queryset(ventes,request)
+    serializer=VenteProduitSerializer(paginated_Historique_vente,many=True)
 
     
-    return Response(serializer.data,status=status.HTTP_200_OK)
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -428,9 +435,12 @@ def historiqueAchat(request):
         Achat =Achat.order_by("-total")
     if sort_by == "montant_asc":
         Achat =Achat.order_by("total")
+        
 
-    serializer=ApprovisionnerProduitSerializer(Achat,many=True)
-    return Response(serializer.data,status=status.HTTP_200_OK)
+    paginator = HistoriquePagination()
+    paginated_achat=paginator.paginate_queryset(Achat,request)
+    serializer=ApprovisionnerProduitSerializer(paginated_achat,many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -462,8 +472,13 @@ def historiquePerte(request):
     if sort_by == "montant_asc":
         perte =perte.order_by("total")
 
-    serializer=PerteProduitSerializer(perte,many=True)
-    return Response(serializer.data,status=status.HTTP_200_OK)
+
+    paginator = HistoriquePagination()
+    paginated_perte=paginator.paginate_queryset(perte,request)
+
+
+    serializer=PerteProduitSerializer(paginated_perte,many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -547,7 +562,7 @@ def ReApprovisionnerProduit(request,id_prod):
            
 
         )
-        # mise a jour du stock
+    
 
         produit.quantite += quantite
         produit.save()
@@ -611,7 +626,7 @@ def notification(request):
 def categorieVente(request):
     dateDebut = request.GET.get('dateDebut')
     dateFin = request.GET.get('dateFin')
-    categories = request.GET.getlist('categories[]')  # liste ['Electro', 'Mode']
+    categories = request.GET.getlist('categories[]') 
 
     ventes = VenteProduit.objects.all()
 
@@ -679,7 +694,6 @@ def download_story_vente(request):
     writer.writerow(['trasaction_Id','produit_id','produit_nom','prix','produit_image','categorie_id','categorie nom','quantite','date_vente'])
     for vente in ventes:
         writer.writerow([
-            vente.transaction_id,
             vente.produit.id,
             vente.produit.name,
             vente.produit.prix,
@@ -692,57 +706,7 @@ def download_story_vente(request):
     return response
 
 
-@api_view(['GET']) # Indique que cette vue n'accepte que les requêtes GET
-def get_product_recommandations_api(request, product_id):
-    try:
-        # --- CHOISISSEZ LA BONNE LIGNE ICI SELON LE TYPE DE L'INDEX DE VOTRE PIVOT_TABLE ---
-        # Si votre pivot_table.index.dtype est 'int64' (entier) :
-        product_id_for_model = int(product_id) 
-        # Si votre pivot_table.index.dtype est 'object' (chaîne de caractères) :
-        # product_id_for_model = str(product_id) 
-        
-    except ValueError:
-        return Response({'error': 'ID de produit invalide.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    recommendations_data = get_recommendations(
-        target_product_id=product_id_for_model, 
-        top_k=5 
-    )
-
-    serializer = RecommendedProductSerializer(recommendations_data, many=True)
-    
-    return Response({'recommendations': serializer.data}, status=status.HTTP_200_OK)
-
-
-
-
-@api_view(["GET"])
-
-def historiqueClient(request):
-    user= request.user
-    user_id=user.id 
-
-    try:
-        client= get_object_or_404(Client,id=user_id)
-        ventes= VenteProduit.objects.filter(client=client)
-
-        serializer= VenteProduitSerializer(ventes)
-
-        return Response (serializer.data,status=status.HTTP_200_OK)
-    
-    except:
-        return Response(serializer.error,status.HTTP_400_BAD_REQUEST)
-
-
-
-    
-
-
-
-
-
-
-  # Assure-toi d'importer ce modèle aussi
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -830,114 +794,8 @@ def AchatProduit(request):
 
 
 
+# ---------------------------------REVENUES------------------------------------------
 
-# donc mobile money 
-
-
-
-@api_view(["POST"])
-def initier_paiement_mobile_money(request):
-    try:
-        print("---- Données reçues ----")
-        print(request.data)
-
-        montant = request.data.get("montant")
-        numero = request.data.get("numero")  # si tu le passes plus tard
-        client_name = request.data.get("client")
-        produits = request.data.get("produits", [])
-        date_vente = request.data.get("date_vente")
-
-        if not produits or not client_name:
-            return Response({"message": "Client ou produits manquants"}, status=400)
-
-        transaction_id = str(uuid.uuid4())
-
-      
-        print("Initialisation Cinetpay...")
-        client = Cinetpay(settings.CINETPAY_APIKEY, settings.CINETPAY_SITE_ID)
-
-        payload = {
-            "amount": montant,
-            "currency": "CDF",
-            "transaction_id": transaction_id,
-            "description": "Paiement test via LocalTunnel",
-            "return_url": "http://localhost:3000/retour",
-            "notify_url": "https://light-oranges-sit.loca.lt/api/callback/",
-            "customer_name": client_name,
-            "customer_surname": "TEST"
-        }
-
-        response = client.PaymentInitialization(payload)
-        print(" Réponse Cinetpay:", response)
-
-      
-
-        if response.get("code") == "201":
-            return Response({
-                "status": "en_attente",
-                "redirect_url": response["data"]["payment_url"],
-                "transaction_id": transaction_id
-            })
-        else:
-            return Response({"message": "Erreur côté Cinetpay", "detail": response}, status=400)
-
-    except Exception as e:
-        print(" ERREUR SERVEUR :", str(e))
-        traceback.print_exc()
-        return Response({"message": "Erreur serveur", "detail": str(e)}, status=500)
-
-
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def paiement_callback(request):
-    transaction_id = request.data.get("transaction_id")
-    statut_api = request.data.get("status")  
-
-    try:
-        paiement = Paiement.objects.get(transaction_id=transaction_id)
-
-        if statut_api == "ACCEPTED":
-            paiement.statut = "valide"
-            paiement.save()
-
-            client_obj = paiement.client
-
-            vente_temp = VenteTemporaire.objects.filter(transaction_id=transaction_id)
-            if not vente_temp.exists():
-                return Response({"message": "Aucun produit associé à cette vente."}, status=400)
-
-            for item in vente_temp:
-                produit = item.produit
-                quantite = item.quantite
-
-                if produit.quantite < quantite:
-                    return Response({"message": f"Stock insuffisant pour {produit.nom}"}, status=400)
-
-                total = produit.prix * quantite
-
-                VenteProduit.objects.create(
-                    produit=produit,
-                    quantite=quantite,
-                    total=total,
-                    client=client_obj,
-                    transaction_id=transaction_id
-                )
-
-                produit.quantite -= quantite
-                produit.save()
-
-            vente_temp.delete()
-
-            return Response({"message": "Paiement confirmé et vente enregistrée."}, status=200)
-
-        else:
-            paiement.statut = "echoue"
-            paiement.save()
-            return Response({"message": "Paiement refusé."}, status=200)
-
-    except Paiement.DoesNotExist:
-        return Response({"message": "Transaction inconnue."}, status=404)
-    
 
 @api_view(['GET'])
 def revenus_par_produit(request):

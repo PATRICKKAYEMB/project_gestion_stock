@@ -9,7 +9,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa'
 import { BASEUrl } from '@/api/api'
 import { AppContext } from '@/context/AppContext'
 import {useAuth} from '@/hooks/useAuth'
-import { MdAdd } from 'react-icons/md'
+import { MdAdd, MdWarning } from 'react-icons/md'
 
 
 const DetailProduit = () => {
@@ -41,6 +41,15 @@ const DetailProduit = () => {
             }
             else{
                    navigate(`/modifierProduit/${detail_produit.id}/`);   
+            }     
+      }
+
+       function verificationPerte(detail_produit) {
+         if (!user || user.role !== "admin") {
+              alert("Seul l'admin a le droit de modifier un produit");
+            }
+            else{
+                   navigate(`/ajouterPerte/${detail_produit.id}/`);   
             }     
       }
 
@@ -115,6 +124,11 @@ const DetailProduit = () => {
                                 
                            </div>
                            <div className='flex gap-5'>
+
+                                    <button className='flex items-center gap-2 px-3 py-2 bg-orange-900 text-white rounded shadow' onClick={() => verificationPerte(detail_produit)}>
+                                      
+                                      <MdWarning/>
+                                      </button>
                                  
                                       
                                       <button className='flex items-center gap-2 px-3 py-2 bg-orange-900 text-white rounded shadow' onClick={() => vericationReApprovisionner(detail_produit)}>
